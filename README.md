@@ -78,3 +78,9 @@ FastAPI · SQLite or PostgreSQL · Qdrant · InsightFace / PyTorch · React (Vit
 ---
 
 **UBIS — Haryana Police** · AI outputs are investigative leads only; human verification required. · Proprietary
+
+---
+
+## Git and model weights
+
+Large files under `backend/models/` are **ignored by Git** (see `.gitignore`). Official **handover ZIP** builds may still include that folder so deployments work offline. After `git clone`, copy weights from the handover package or follow `docs/HANDOVER_GURUGRAM/01_INSTALL.md`. See `backend/models/README.md`.
