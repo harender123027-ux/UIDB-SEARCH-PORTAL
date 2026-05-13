@@ -1,0 +1,58 @@
+UBIS — Quick install
+====================
+
+You will need:
+  - one Linux server (Ubuntu 22.04 LTS recommended; RHEL/Rocky 9 also OK)
+  - 4+ vCPU, 8+ GB RAM, 100+ GB SSD (see 01_INSTALL.md Chapter 01 for sizing)
+  - root / sudo access on the server
+  - the file UBIS_Gurugram_Handover.zip you just received
+
+Run these commands on the server, in order:
+
+  1. Copy the zip to the server, then unzip it:
+        cd /opt && sudo mkdir -p ubis && sudo chown "$USER":"$USER" ubis && cd ubis
+        unzip /path/to/UBIS_Gurugram_Handover.zip
+        cd UBIS_Gurugram_Handover
+
+  2. Install Docker Engine + docker-compose-plugin (or Podman 4.4+ with
+     podman-compose). The full apt / dnf commands are spelled out in
+     docs/HANDOVER_GURUGRAM/01_INSTALL.md (Chapter 01, sections 3 and 4).
+     **On-prem install (one page):** docs/HANDOVER_GURUGRAM/README.md
+     If you use Docker (not Podman), add yourself to the docker group:
+        sudo usermod -aG docker "$USER" && newgrp docker
+
+  3. Run the installer (idempotent — safe to re-run):
+        bash scripts/onprem/install.sh
+
+     The first run takes 5-10 minutes to build the container images.
+     The installer generates a strong random JWT_SECRET and a strong random
+     INITIAL_ADMIN_PASSWORD, writes both to .env at mode 600, seeds the
+     database, and starts the stack.
+
+  4. Confirm everything is healthy:
+        bash scripts/onprem/ubis-status.sh
+     You should see ubis-backend "Up ... (healthy)" and ubis-frontend "Up ...",
+     and a backend-health line of {"status":"ok"}.
+
+  5. From a workstation on the police LAN, open the URL:
+        http://<server-hostname>:8080
+     Log in as user "admin". The password is the value of
+     INITIAL_ADMIN_PASSWORD in the .env file the installer just wrote:
+        grep INITIAL_ADMIN_PASSWORD .env
+     Change the admin password from the UI immediately (see 02_OPERATIONS.md
+     Chapter 06, Security hardening).
+
+  6. Schedule a nightly backup and complete the security hardening checklist
+     in 02_OPERATIONS.md BEFORE letting officers use the system.
+
+If anything goes wrong, open docs/HANDOVER_GURUGRAM/04_TRAINING_AND_SUPPORT.md
+(Chapter 14, Troubleshooting & FAQ) first.
+
+The handbook lives under docs/HANDOVER_GURUGRAM/:
+
+  README.md                   — start here (on-prem install, one page)
+  01_INSTALL.md               — long-form prerequisites, secrets, first-boot checklist
+  02_OPERATIONS.md            — runbook, backup & restore, security hardening
+  03_USER_GUIDES.md           — per-role guides + bulk-import SOP
+  04_TRAINING_AND_SUPPORT.md  — half-day training, FAQ, support & escalation
+  05_ACCEPTANCE.md            — sign-off forms + pre-handover verification

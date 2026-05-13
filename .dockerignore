@@ -1,0 +1,17 @@
+node_modules
+dist
+.git
+backend/app/ubis.db
+uploads
+reference_photos
+qdrant_data
+backend/models
+backend/qdrant_data
+backend/reference_photos
+backend/uploads
+__pycache__
+*.pyc
+.env
+.env.production
+.python-version
+.DS_Store

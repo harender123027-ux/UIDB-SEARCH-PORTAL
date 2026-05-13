@@ -1,0 +1,50 @@
+# Logs
+logs/
+backend/logs/
+*.log
+
+# Backups and temporary files
+backups/
+/tmp/*
+*.zip
+*.tar.gz
+
+# Local settings
+.env
+.env.production
+.env.local
+.azure-credentials*.txt
+
+# Python
+.venv
+__pycache__
+*.pyc
+.pytest_cache/
+
+# Node
+node_modules
+dist
+.vercel
+
+# App specific
+backend/reference_photos/*
+!backend/reference_photos/.gitkeep
+# Runtime uploads (submissions, criminal photos, etc.) — use temp dirs in tests
+backend/uploads/**
+!backend/uploads/.gitkeep
+backend/app/db.sqlite3
+backend/ubis.db
+backend/qdrant_storage
+
+# Large AI weights (~600 MB total): not in Git. Handover ZIP may include this folder for offline install.
+backend/models/*
+!backend/models/README.md
+
+# Testing
+playwright-report
+test-results
+
+# System
+.DS_Store
+.gemini/
+test_venv/

@@ -1,0 +1,2 @@
+# Qdrant persistent storage (local vector DB)
+qdrant_data/

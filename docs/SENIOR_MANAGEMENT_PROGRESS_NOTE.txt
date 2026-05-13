@@ -1,0 +1,65 @@
+UBIS — STATUS AND HANDOVER BRIEF
+Unidentified Body Identification System
+
+Reference: UBIS-BRF-2026-04
+Date: 2 April 2026
+Distribution: Police leadership; Information Technology; Cyber Cell; project nodal officers
+Prepared by: UBIS delivery team (technical)
+
+---
+
+1. Purpose of this document
+This brief summarises the current maturity of UBIS, what is fit for controlled operational use, what remains outside scope, and the recommended rollout approach. It is intended to support governance decisions on internal release, police-led validation, and timing of any wider public communication.
+
+2. Executive summary
+The application and supporting documentation are suitable for formal handover to the police department and for an internal release on department-approved infrastructure. The recommended course is a phased programme: controlled internal use and user acceptance testing (UAT), stabilisation based on findings, then wider deployment and any major public announcement only after documented sign-off.
+
+UBIS supports investigation workflows for unidentified bodies through structured case capture, multi-image evidence, face-based similarity search, and officer-facing controls (roles, audit trail, match review, dashboard). Outputs are investigative leads and require human verification; they do not by themselves establish legal identity.
+
+3. Delivered capabilities (internal release baseline)
+The following are available in the current build for validation on police-hosted or police-contracted environments:
+
+- Case registration via web-based workflow, including multiple image categories (face, full body, marks, clothing, belongings).
+- Face embedding and similarity matching with ranked candidate lists.
+- Text-based and voice-assisted search (where deployed and policy-compliant).
+- Role-based access, audit logging, match feedback, and dashboard views.
+- Geographic master data (Haryana districts and police stations) and bulk import path for historic records aligned with the published data template.
+
+4. Documented enhancements supporting handover
+Recent technical and documentation updates include: alignment of bulk import with live submission rules for embeddings; extension of the bulk template and police data guide to optional clothing and belonging imagery; clarification of API behaviour in the published API reference; a stakeholder scope matrix (Green / Amber / Red); and a police-facing UAT and sign-off document including indicative cloud sizing and infrastructure handover checklists.
+
+5. Scope boundaries and limitations
+The following should be treated as explicit limitations for the current product baseline:
+
+- No integration with national criminal records or federated platforms (for example CCTNS or ZIPNET) is implemented in this codebase.
+- Fingerprint, DNA, and other non-face biometric workflows are not in scope.
+- There is no forensic “reconstruction” pipeline for still or moving scene imagery beyond recognition and retrieval on supplied photographs.
+- Structured “attributes” used for search are primarily officer-entered or bulk-imported fields; they are not automatically inferred from imagery by a separate vision model on upload.
+- Automatic enforcement of image quality standards is advisory rather than fully gate-keeping; case identifiers are system-internal unless mapped by policy to an external scheme.
+
+6. Recommended rollout approach
+The following phased approach is recommended:
+
+Phase 1 — Handover: Transfer of source materials, deployment artefacts, environment configuration guidance, and operational runbooks to police IT and designated project authority.
+
+Phase 2 — Internal release: Deployment to a staging or limited production slice; participation of Cyber Cell, IT security, and nominated pilot districts or police stations; execution of UAT scenarios and infrastructure checks as set out in UAT_AND_POLICE_SIGNOFF.md.
+
+Phase 3 — Stabilisation: Prioritised remediation of defects; updates to standard operating procedures and training; optional repeat of internal release if material changes are made.
+
+Phase 4 — Scale-up and communication: Broader rollout and any high-visibility public announcement only after formal acceptance criteria are met and recorded sign-off is obtained from authorised police signatories.
+
+7. Client actions requested (police department)
+To execute the above programme effectively, the following organisational commitments are requested:
+
+- Nomination of pilot units and single points of contact for IT, Cyber Cell, and operational UAT.
+- Execution of historic data pilot import and accuracy evaluation as described in the UAT document, with recorded results.
+- Agreement on feedback channels, severity classification for defects, and criteria for progression between phases.
+- Confirmation of legal and data-handling rules, including any constraints on public-facing search, prior to large-scale launch.
+
+8. Positioning statement for internal stakeholders
+For internal and inter-departmental communication, UBIS may be described as: an AI-assisted identification support system that accelerates capture, search, and ranking of photographic leads for officer review, within existing investigative and evidentiary frameworks.
+
+9. Conclusion
+The solution is appropriate for immediate handover and internal release subject to police-led UAT, security validation, and completion of sign-off registers. Major public launch should follow successful completion of that programme rather than precede it.
+
+— End of document —

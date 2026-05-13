@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pehchan — User Flow, Architecture & Tech</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --amber: #f59e0b;
+      --cyan: #22d3ee;
+      --emerald: #34d399;
+      --violet: #a78bfa;
+      --text: #f1f5f9;
+      --textDim: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem; }
+    h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .subtitle { color: var(--textDim); font-size: 0.95rem; margin-bottom: 2rem; }
+    h2 { font-size: 1.15rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 0.75rem; color: var(--cyan); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--amber); }
+    p { margin: 0 0 1rem; color: var(--textDim); }
+    ul { margin: 0 0 1rem; padding-left: 1.5rem; color: var(--textDim); }
+    .flow { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 1rem 0; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap; }
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 1rem 0; }
+    .tech-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px; }
+    .tech-card strong { color: var(--emerald); font-size: 0.9rem; }
+    .tech-card span { font-size: 0.8rem; color: var(--textDim); }
+    .badge { display: inline-block; padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem; }
+    .badge-dash { background: rgba(52,211,153,0.2); color: var(--emerald); }
+    .badge-case { background: rgba(245,158,11,0.2); color: var(--amber); }
+    .badge-search { background: rgba(34,211,238,0.2); color: var(--cyan); }
+    .badge-schema { background: rgba(167,139,250,0.2); color: var(--violet); }
+    .badge-audit { background: rgba(244,63,94,0.15); color: #fb7185; }
+    .run-info { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 0.9rem; }
+    .run-info code { background: rgba(255,255,255,0.08); padding: 0.15em 0.4em; border-radius: 4px; }
+    .run-info strong { color: var(--emerald); }
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--textDim); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Pehchan · Haryana Police</h1>
+    <p class="subtitle">Pehchan (Unidentified Bodies Identification System) — User flow, architecture & tech (Phase 1 MVP)</p>
+
+    <section class="run-info">
+      <strong>Run the app</strong><br>
+      Backend: <code>cd backend && .venv/bin/uvicorn app.main:app --reload --port 8000</code><br>
+      Frontend: <code>npm run dev</code> → <code>http://localhost:5173</code><br>
+      Seed repository: add images to <code>backend/reference_photos/</code> then <code>python -m scripts.seed_demo_repository</code>
+    </section>
+
+    <h2>User flow (high level)</h2>
+    <div class="flow">1. Dashboard — view totals, recent cases
+2. New Case — register unidentified body (photos + attributes) → creates submission
+3. Search — add photo and/or description and/or voice → click Search → see matches from repository
+4. Schemas — reference view of data models
+5. Audit Log — immutable trail of actions</div>
+
+    <h2>Architecture</h2>
+    <h3>Frontend (PWA)</h3>
+    <p>React SPA (Vite). Single-page app with tabs: Dashboard, New Case, Search, Schemas, Audit. Calls backend REST API. No auth in MVP.</p>
+    <h3>Backend (API)</h3>
+    <p>FastAPI. Handles submissions, face embedding, vector search, attribute/voice search. Persists to SQLite and Qdrant.</p>
+    <h3>Data flow</h3>
+    <div class="flow">Photo upload → InsightFace embedding (512-d) → Qdrant vector DB
+Text/voice → keyword extraction → attribute filter on reference_persons
+Combined search → merge by overlap (how many inputs matched) → sort by confidence</div>
+    <h3>Repository</h3>
+    <p>Reference persons (missing persons) stored in SQLite + face embeddings in Qdrant. Seed script loads images from <code>reference_photos/</code> and indexes them.</p>
+
+    <h2>Tech stack</h2>
+    <div class="tech-grid">
+      <div class="tech-card"><strong>React 18</strong><br><span>Frontend UI</span></div>
+      <div class="tech-card"><strong>Vite 5</strong><br><span>Build & dev server</span></div>
+      <div class="tech-card"><strong>FastAPI</strong><br><span>Backend API</span></div>
+      <div class="tech-card"><strong>SQLite</strong><br><span>Submissions, refs, matches</span></div>
+      <div class="tech-card"><strong>Qdrant</strong><br><span>Vector search (face embeddings)</span></div>
+      <div class="tech-card"><strong>InsightFace</strong><br><span>Face detection & 512-d embedding</span></div>
+      <div class="tech-card"><strong>faster-whisper</strong><br><span>Voice → text (STT)</span></div>
+      <div class="tech-card"><strong>Playwright</strong><br><span>E2E tests</span></div>
+      <div class="tech-card"><strong>pytest</strong><br><span>Backend tests</span></div>
+    </div>
+
+    <h2><span class="badge badge-dash">Dashboard</span></h2>
+    <p>Shows total cases, cases with matches, and recent submissions table. Empty state when no data.</p>
+
+    <h2><span class="badge badge-case">New Case</span></h2>
+    <p>Multi-step: (1) Photos — face frontal, profiles, full body, marks; face condition. (2) Physical attributes. (3) Submit. Backend extracts face embeddings and stores in Qdrant.</p>
+
+    <h2><span class="badge badge-search">Search</span></h2>
+    <p><strong>One simple flow:</strong> Add any combination of photo, text description, or voice note. Click Search. All inputs are run against the repository; results merged by overlap (how many modalities matched) and confidence. Voice is transcribed via Whisper before search.</p>
+
+    <h2><span class="badge badge-schema">Schemas</span></h2>
+    <p>Reference view: PostgreSQL tables (cases, persons, images, matches, feedback, missing_persons, users, audit_log), Qdrant collections, Blob storage layout.</p>
+
+    <h2><span class="badge badge-audit">Audit Log</span></h2>
+    <p>INSERT-only trail. Every submission, match, feedback recorded with timestamp, action, resource.</p>
+
+    <footer>Pehchan Phase 1 MVP · AI outputs are investigative leads only; human verification required.</footer>
+  </div>
+</body>
+</html>

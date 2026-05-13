@@ -1,0 +1,50 @@
+{
+  "admin": {
+    "username": "adminUser",
+    "password": "adminPass123",
+    "role": "admin",
+    "name": "Admin Test User"
+  },
+  "regular": {
+    "username": "regularUser",
+    "password": "userPass123",
+    "role": "field_officer",
+    "name": "Regular Test User"
+  },
+  "users": [
+    {
+      "type": "admin",
+      "username": "adminUser",
+      "password": "adminPass123",
+      "email": "admin@example.com",
+      "permissions": ["create", "read", "update", "delete"],
+      "scenarios": [
+        {
+          "description": "Admin creates a new user",
+          "expectedOutcome": "User is successfully created"
+        },
+        {
+          "description": "Admin views dashboard",
+          "expectedOutcome": "Dashboard displays all relevant data"
+        }
+      ]
+    },
+    {
+      "type": "regular",
+      "username": "regularUser",
+      "password": "userPass123",
+      "email": "user@example.com",
+      "permissions": ["read"],
+      "scenarios": [
+        {
+          "description": "Regular user views dashboard",
+          "expectedOutcome": "Dashboard displays limited data"
+        },
+        {
+          "description": "Regular user attempts to create a new user",
+          "expectedOutcome": "Access denied"
+        }
+      ]
+    }
+  ]
+}

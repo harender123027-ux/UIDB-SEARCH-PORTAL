@@ -1,0 +1,59 @@
+# Git
+.git
+.gitignore
+
+# Logs
+logs/
+logs_unzipped/
+logs.zip
+*.log
+
+# Python
+__pycache__/
+*.pyc
+models/
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Docker
+Dockerfile
+Dockerfile.production
+Dockerfile.user
+
+# IDE
+.vscode/
+.idea/
+
+# Local data - these will be mounted as volumes in production
+uploads/*
+!uploads/.gitkeep
+reference_photos/*
+!reference_photos/.gitkeep
+qdrant_data/*
+qdrant_storage/*
+*.db
+*.db-journal
+*.db-journal1
+*.db-journal2
+
+# Models - will be downloaded during build
+models/
+
+# Tests
+test-results/
+playwright-report/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Documentation
+README.md
+docs/
+
+# Scripts
+# scripts/

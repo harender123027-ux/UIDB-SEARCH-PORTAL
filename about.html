@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Pehchan | Haryana Police</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #002D62; /* Haryana Police Deep Blue */
+            --secondary: #D4AF37; /* Gold Logo Color */
+            --accent: #0056b3;
+            --bg: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--primary);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h2 svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--secondary);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .cost-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .cost-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .total-row {
+            font-size: 1.2rem;
+            font-weight: 700 !important;
+            color: var(--accent) !important;
+            border-bottom: none !important;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Pehchan by Haryana Police</h1>
+    <p>Unified Biometric Identification System — State-of-the-Art Facial Recognition & Analytics</p>
+</header>
+
+<div class="container">
+    <div class="section-grid">
+        <!-- Functionality -->
+        <div class="card">
+            <h2>
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                Functionality
+            </h2>
+            <ul>
+                <li><strong>AdaFace Integration</strong>: High-accuracy facial embeddings optimized for low-quality surveillance footage.</li>
+                <li><strong>Quality Scoring</strong>: Real-time image quality assessment (L2 Norm) to ensure biometric reliability.</li>
+                <li><strong>Multi-Target Search</strong>: Combined matching across UI Bodies, Criminal Databases, and Missing Persons.</li>
+                <li><strong>Robust Fallback</strong>: Center-crop fallback ensures processing even when detection landmarks are missing.</li>
+            </ul>
+        </div>
+
+        <!-- Architecture -->
+        <div class="card">
+            <h2>
+                <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                Architecture
+            </h2>
+            <p style="margin-bottom: 12px; font-size: 0.95rem;">Cloud-native hybrid architecture designed for speed and state-level scale.</p>
+            <ul>
+                <li><strong>Decoupled Models</strong>: AI weights (~1GB) are mounted via Azure Blob Storage for ultra-fast deployments.</li>
+                <li><strong>Vector Search</strong>: Qdrant-powered sub-millisecond similarity lookups for 100k+ records.</li>
+                <li><strong>Micro-Background Tasks</strong>: Celery/Redis pipeline for asynchronous, non-blocking biometric processing.</li>
+            </ul>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="card">
+            <h2>
+                <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                Tech Stack
+            </h2>
+            <div class="badges">
+                <span class="badge">FastAPI (Python)</span>
+                <span class="badge">React (PWA)</span>
+                <span class="badge">Qdrant (Vector DB)</span>
+                <span class="badge">PostgreSQL (Azure)</span>
+                <span class="badge">PyTorch</span>
+                <span class="badge">InsightFace</span>
+                <span class="badge">AdaFace</span>
+                <span class="badge">Docker & ACR</span>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.9rem;">Modern, open-source AI stack with enterprise-grade cloud orchestration.</p>
+        </div>
+
+        <!-- Cost Analysis -->
+        <div class="card">
+            <h2>
+                <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                Cost Analysis
+            </h2>
+            <p style="font-size: 0.85rem; opacity: 0.8;">Estimate for ~3k bodies/year (15k total).</p>
+            <table class="cost-table">
+                <tr><td>Azure App Service</td><td>$100.00</td></tr>
+                <tr><td>PostgreSQL Database</td><td>$20.00</td></tr>
+                <tr><td>Azure Blob Storage</td><td>$5.00</td></tr>
+                <tr><td>Private Registry (ACR)</td><td>$5.00</td></tr>
+                <tr class="total-row"><td>Total Estimated /mo</td><td>~$130.00</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 Haryana Police. Developed for State Surveillance & Public Safety.
+</footer>
+
+</body>
+</html>

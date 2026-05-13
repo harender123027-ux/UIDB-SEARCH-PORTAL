@@ -1,0 +1,3 @@
+dd_no,found_date,found_district,ps_name,found_loc,gender,age_min,age_max,height_cm,build,skin_tone,hair_color,beard,visible_marks,clothing_description,notes,additional_details,image_face_frontal_path,image_face_left_path,image_face_right_path,image_full_body_path,image_tattoo_path
+DDR-123-2024,2024-03-20,Gurugram,Sadar,Main Market Sector 14,Male,25,35,175,Medium,Fair,Black,No,scar on right cheek,blue shirt and black pants,Found near metro station,,images/case1/face.png,,,images/case1/body.png,
+DDR-456-2024,2024-03-22,Faridabad,Central,Railway Track,Female,40,50,160,Slim,Medium,Grey,No,birthmark on neck,red saree,Identity unknown,,images/case2/face_front.png,images/case2/face_left.png,images/case2/face_right.png,images/case2/full.png,images/case2/tattoo.png
