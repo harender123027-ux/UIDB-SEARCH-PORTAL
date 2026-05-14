@@ -82,13 +82,10 @@ else
         SED=(sed -i '')
     fi
     "${SED[@]}" "s|JWT_SECRET=.*|JWT_SECRET=${JWT_SECRET}|" .env
-    # Append the initial admin password — seed_admin.py reads INITIAL_ADMIN_PASSWORD on first run.
-    cat >>.env <<EOF
-
-# Initial admin password — only used the very first time the database is seeded.
-# Operator MUST change it immediately after first login from the UI.
-INITIAL_ADMIN_PASSWORD=${ADMIN_PW}
-EOF
+    # Replace the INITIAL_ADMIN_PASSWORD placeholder in-place so the file has a
+    # single canonical assignment (avoids the duplicate-line cosmetic wart where
+    # both the placeholder and the generated value coexist).
+    "${SED[@]}" "s|INITIAL_ADMIN_PASSWORD=.*|INITIAL_ADMIN_PASSWORD=${ADMIN_PW}|" .env
     if [[ "$PROFILE" == "full" ]]; then
         cat >>.env <<EOF
 
