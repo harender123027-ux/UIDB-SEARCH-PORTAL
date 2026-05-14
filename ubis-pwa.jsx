@@ -1298,12 +1298,17 @@ function SearchTab({ user }) {
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, color: C.text, fontFamily: C.mono, fontWeight: 700 }}>{r.label}</div>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginTop: 2 }}>ID: {r.id.slice(0, 8)}...</div>
-                  
+                  {r.attributes?.dd_no && (
+                    <div style={{ fontSize: 12, color: C.cyan, fontFamily: C.mono, fontWeight: 700, marginTop: 4 }}>
+                      DD No. {r.attributes.dd_no}
+                    </div>
+                  )}
+                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginTop: 2 }}>ID: {r.id.slice(0, 8)}…</div>
+
                   {r.attributes && Object.keys(r.attributes).length > 0 && (
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
                       {Object.entries(r.attributes)
-                        .filter(([k, v]) => ["dd_no", "height", "found_district", "gender", "age_group"].includes(k) && v)
+                        .filter(([k, v]) => ["height", "height_cm", "found_district", "gender", "age_group", "age_min", "age_max", "ps_name", "found_date", "found_loc"].includes(k) && v != null && v !== "")
                         .map(([k, v]) => (
                           <div key={k} style={{ background: C.bg, padding: "3px 6px", borderRadius: 4, border: `1px solid ${C.borderLight}`, display: "flex", gap: 4, alignItems: "center" }}>
                             <span style={{ fontSize: 8, color: C.textDim, fontFamily: C.mono, textTransform: k === "marks" || k === "clothing" ? "none" : "uppercase" }}>

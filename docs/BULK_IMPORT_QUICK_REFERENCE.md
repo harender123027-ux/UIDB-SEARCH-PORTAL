@@ -2,7 +2,8 @@
 
 **For printing and desk reference during data entry**
 
-> **📖 For detailed explanations and troubleshooting**, see [`BULK_IMPORT_GUIDE.md`](BULK_IMPORT_GUIDE.md)
+> **For detailed explanations and troubleshooting**, see [`BULK_IMPORT_GUIDE.md`](BULK_IMPORT_GUIDE.md).
+> **For 10 000+ records, batching, and overnight runs**, see [`BULK_IMPORT_AT_SCALE.md`](BULK_IMPORT_AT_SCALE.md).
 
 ---
 
@@ -246,6 +247,35 @@ sqlite3 ./data/ubis.db "SELECT COUNT(*) FROM submissions;"
 
 ---
 
-**Full guide:** See `docs/BULK_IMPORT_GUIDE.md`
+## Housekeeping (IT)
 
-**Last updated:** 2025-03-10
+```bash
+# List ephemeral search-probe submissions (created by face-search uploads).
+podman exec ubis-backend python -m scripts.cleanup_search_probe_submissions --dry-run
+
+# Delete them and their files + Qdrant vectors.
+podman exec ubis-backend python -m scripts.cleanup_search_probe_submissions
+
+# One-time legacy sweep after upgrading to the marker-aware build.
+podman exec ubis-backend python -m scripts.cleanup_search_probe_submissions --include-legacy
+```
+
+---
+
+## Scale at a glance
+
+| Volume | Approach |
+|--------|----------|
+| ≤ 1 000 | Single batch, ~15–25 min on a 4 vCPU host |
+| 1 000 – 5 000 | Single batch in a quiet window, ~30 min – 2 h |
+| 5 000 – 50 000 | 10–20 batches of 2 500–5 000, one per night |
+| > 50 000 | Switch to `--profile full` + dedicated Qdrant container, then raise backend workers |
+
+Reserve ~600 GB of disk for a full 50 000-case run with ~3 photos / case at ~3 MB each.
+
+---
+
+**Full guide:** `docs/BULK_IMPORT_GUIDE.md`
+**At-scale guide:** `docs/BULK_IMPORT_AT_SCALE.md`
+
+**Last updated:** 2026-05-14

@@ -26,6 +26,10 @@ services:
     container_name: ubis-backend
     profiles: ["lite", "full"]
     restart: unless-stopped
+    # Embedded Qdrant (lite profile) holds an exclusive lock on /app/qdrant_data,
+    # so the backend must run a single worker. Scale up only when QDRANT_URL points
+    # at a server (HTTP/gRPC) rather than a local path.
+    command: ["gunicorn","app.main:app","--worker-class","uvicorn.workers.UvicornWorker","--workers","1","--bind","0.0.0.0:8000","--timeout","180","--access-logfile","-","--error-logfile","-"]
     expose:
       - "8000"
     environment:

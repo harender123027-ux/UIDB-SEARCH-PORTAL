@@ -158,11 +158,23 @@ def _get_adaface():
 
 
 def _get_app():
+    """
+    Load InsightFace with detection + recognition modules.
+
+    buffalo_l ships with ``w600k_r50.onnx`` (512-d ArcFace embedding) and
+    ``det_10g.onnx`` (detection). These two modules are loaded and used both for
+    face detection and for face embedding so that the AdaFace checkpoint is
+    optional. The model files live under ``backend/models/buffalo_l/`` (bind-mounted
+    at ``/app/models/buffalo_l/`` in the on-prem image).
+    """
     global _app
     if _app is None and _INSIGHTFACE_AVAILABLE:
         try:
-            # Detection and landmarks only
-            _app = FaceAnalysis(name="buffalo_l", root=str(Path(__file__).resolve().parents[2]), allowed_modules=["detection"])
+            _app = FaceAnalysis(
+                name="buffalo_l",
+                root=str(Path(__file__).resolve().parents[2]),
+                allowed_modules=["detection", "recognition"],
+            )
             _app.prepare(ctx_id=-1, det_thresh=FACE_DETECTION_THRESHOLD, det_size=(640, 640))
         except Exception:
             pass
@@ -201,20 +213,49 @@ def _placeholder_embedding(image_bytes: bytes) -> tuple[np.ndarray, float]:
     return emb / (np.linalg.norm(emb) + 1e-6), 10.0 # moderate quality
 
 
+def _adaface_fallback(image_bytes: bytes, aligned_img) -> tuple[np.ndarray, float]:
+    """Last-resort embedding path used only when no InsightFace face is available."""
+    model = _get_adaface()
+    if _TORCH_AVAILABLE and model and aligned_img is not None:
+        input_tensor = _preprocess(aligned_img)
+        with torch.no_grad():
+            out = model(input_tensor)
+            magnitude = torch.norm(out, dim=1).item()
+            embedding = (out / (magnitude + 1e-6)).cpu().numpy()[0]
+        return embedding, magnitude
+    return _placeholder_embedding(image_bytes)
+
+
+def _embedding_from_face(face, image_bytes: bytes, img) -> tuple[np.ndarray, float]:
+    """Prefer InsightFace recognition (w600k_r50). Fall back to AdaFace, then placeholder."""
+    emb = getattr(face, "normed_embedding", None)
+    if emb is not None:
+        arr = np.asarray(emb, dtype=np.float32)
+        norm = float(np.linalg.norm(arr)) or 1.0
+        return arr / norm, norm
+    emb = getattr(face, "embedding", None)
+    if emb is not None:
+        arr = np.asarray(emb, dtype=np.float32)
+        norm = float(np.linalg.norm(arr)) or 1.0
+        return arr / norm, norm
+    aligned = _align_face(img, face.kps) if face.kps is not None else None
+    return _adaface_fallback(image_bytes, aligned)
+
+
 def extract_face_embeddings(
     image_path: Path,
     image_type: str = "face_frontal",
     enforce_detection: bool = True
 ) -> list[dict[str, Any]]:
     """
-    Extract face embeddings using AdaFace.
-    Returns list of dicts with: embedding, confidence, quality.
+    Extract face embeddings using InsightFace recognition (w600k_r50 / 512-d).
+    Falls back to AdaFace, then to a deterministic placeholder when neither is
+    available. Returns list of dicts with: embedding, confidence, quality.
     """
     image_bytes = image_path.read_bytes()
     app = _get_app()
-    model = _get_adaface()
 
-    if app is None or cv2 is None or model is None:
+    if app is None or cv2 is None:
         if os.getenv("ENVIRONMENT") == "production":
             print("WARNING: AI Models not found at /app/models! Ensure Azure Storage Container is mounted correctly.")
         emb, qual = _placeholder_embedding(image_bytes)
@@ -234,22 +275,12 @@ def extract_face_embeddings(
     for face in faces[:FACE_EMBEDDINGS_PER_IMAGE_MAX]:
         if float(getattr(face, "det_score", 0) or 0) < FACE_DETECTION_THRESHOLD:
             continue
-        if face.kps is not None:
-            aligned = _align_face(img, face.kps)
-            input_tensor = _preprocess(aligned)
-            if _TORCH_AVAILABLE and model:
-                with torch.no_grad():
-                    out = model(input_tensor)
-                    magnitude = torch.norm(out, dim=1).item()
-                    embedding = (out / (magnitude + 1e-6)).cpu().numpy()[0]
-            else:
-                embedding, magnitude = _placeholder_embedding(image_bytes)
-
-            results.append({
-                "embedding": embedding,
-                "confidence": float(face.det_score),
-                "quality": magnitude
-            })
+        embedding, magnitude = _embedding_from_face(face, image_bytes, img)
+        results.append({
+            "embedding": embedding,
+            "confidence": float(face.det_score),
+            "quality": magnitude,
+        })
 
     if not results and not enforce_detection:
         # Fallback: take center crop or full image
@@ -261,6 +292,7 @@ def extract_face_embeddings(
         if crop.size > 0:
             resized = cv2.resize(crop, (112, 112))
             input_tensor = _preprocess(resized)
+            model = _get_adaface()
             if _TORCH_AVAILABLE and model:
                 with torch.no_grad():
                     out = model(input_tensor)

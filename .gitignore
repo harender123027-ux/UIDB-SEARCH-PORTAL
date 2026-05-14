@@ -44,6 +44,10 @@ backend/models/*
 playwright-report
 test-results
 
+# Runtime on-prem data directory (created by scripts/onprem/install.sh).
+# Contains SQLite DB, Qdrant store, uploaded images, model weights, logs.
+data/
+
 # System
 .DS_Store
 .gemini/

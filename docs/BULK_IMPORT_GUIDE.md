@@ -1,19 +1,30 @@
 # Bulk Import Guide: CSV + Images for UBIS
 **For Data Entry Officers and IT Staff**
 
+> For volumes above ~2 500 rows per batch, also read
+> **[`BULK_IMPORT_AT_SCALE.md`](BULK_IMPORT_AT_SCALE.md)** (batching strategy,
+> overnight runs, storage sizing, and the path from the lite profile to a
+> dedicated Qdrant server when you cross ~50 000 cases).
+
 ---
 
 ## Quick Summary
 
-This guide explains how to bulk-import hundreds of older unidentified bodies (UI bodies) into UBIS from CSV spreadsheets and photos. Instead of manually entering each case through the web form, you'll prepare a batch in a structured CSV file with organized photos, and the IT team will import them all at once using an automated script.
+This guide explains how to bulk-import older unidentified bodies (UI bodies) into UBIS from CSV spreadsheets and photos. Instead of manually entering each case through the web form, you'll prepare a batch in a structured CSV file with organized photos, and the IT team will import them all at once using an automated script.
 
 **What you'll achieve:**
-- Hundreds of historical cases loaded into UBIS in a single operation
-- All photos indexed with face embeddings for fast searching
-- Audit trail logged for compliance
+- Many historical cases loaded into UBIS in a single operation
+- All photos indexed with face embeddings (InsightFace `buffalo_l/w600k_r50.onnx`) for fast searching
+- Audit trail logged for compliance (`action = bulk.import`)
 - Zero manual data entry at the server side
 
-**Time per batch:** 2–3 hours for data-entry team; 10 minutes for IT.
+**Time per batch:** 2–3 hours for the data-entry team; ~15–25 minutes of IT time per 1 000 rows (CPU-only on-prem host).
+
+**Sample CSV:** the file `ui_body_template.csv` at the repository root ships
+with 5 fully-populated example rows (`DDR-SAMPLE-101-2026` … `DDR-SAMPLE-105-2026`)
+covering face, profile, full-body, tattoo, clothing, and belonging slots. Copy
+it into your batch folder, rename to your batch's CSV, and replace the rows
+with real cases.
 
 ---
 
@@ -33,8 +44,11 @@ This guide explains how to bulk-import hundreds of older unidentified bodies (UI
 - [ ] Shell access to the server running UBIS
 - [ ] Docker or Podman installed (check: `docker --version` or `podman --version`)
 - [ ] The UBIS backend codebase (with `scripts/bulk_import_ui_bodies.py`)
-- [ ] Access to `docker-compose.onprem.yml` file
-- [ ] ~30 seconds per image for AI face-embedding processing (parallelized, so faster in total)
+- [ ] Access to `docker-compose.onprem.yml` file. On the **lite** profile this
+      already pins the backend to `--workers 1` because embedded Qdrant holds
+      an exclusive write lock on `data/qdrant/`.
+- [ ] ~0.4–0.8 s per face image on CPU (counted across detection + InsightFace
+      embedding). Plan ~15–25 minutes per 1 000 rows on a 4 vCPU host.
 - [ ] Error log from data-entry team (they send CSV + images; you send back any errors)
 
 ---
@@ -727,14 +741,56 @@ df -h ./data/uploads/
 
 ---
 
+## Housekeeping: removing search-probe submissions
+
+Anonymous face-search uploads create a short-lived submission marked
+`_search_probe = true`. They should never show up in the case gallery. A
+helper script removes them and their related rows (matches, feedback, audit,
+files, Qdrant vectors):
+
+```bash
+# Dry-run: list probe IDs only.
+podman exec ubis-backend python -m scripts.cleanup_search_probe_submissions --dry-run
+
+# Remove probes created by the current (marker-aware) build.
+podman exec ubis-backend python -m scripts.cleanup_search_probe_submissions
+
+# One-time legacy sweep: also delete submissions with empty attributes
+# (created by pre-marker upload-and-match builds). Use after upgrading.
+podman exec ubis-backend python -m scripts.cleanup_search_probe_submissions --include-legacy
+```
+
+Replace `podman exec` with `docker compose -f docker-compose.onprem.yml --profile lite exec -T` if you use Docker.
+
+---
+
+## Scaling to 10k+ records
+
+A short version: **split into batches of 2 500–5 000 rows** and run them one
+after another (overnight if needed). Full plan, including sizing, time
+budgets, failure recovery, and the upgrade path to a dedicated Qdrant server,
+is in **[`BULK_IMPORT_AT_SCALE.md`](BULK_IMPORT_AT_SCALE.md)**.
+
+Quick orientation:
+
+| Volume | Approach | Wall-clock |
+|--------|----------|------------|
+| ≤ 1 000 | Single batch | ~15–25 min |
+| 1 000 – 5 000 | Single batch, run during a quiet window | ~30 min – 2 h |
+| 5 000 – 50 000 | 10–20 batches of 2 500–5 000, one per night | 1–3 weeks of nightly runs |
+| > 50 000 | Switch to `--profile full` (Postgres) and Qdrant **server** container; then raise backend workers | Hours, not days |
+
+---
+
 ## Version History
 
 | Date | Update |
 |------|--------|
 | 2025-03-10 | Initial draft; aligned with bulk_import_ui_bodies.py v1.0 |
+| 2026-05-14 | Embedding switched to InsightFace `buffalo_l/w600k_r50.onnx`; `--workers 1` requirement for embedded Qdrant documented; added scaling guide link and search-probe cleanup steps. |
 
-**Last updated:** 2025-03-10
-**Next review:** 2025-06-10 (or when workflow changes)
+**Last updated:** 2026-05-14
+**Next review:** 2026-08-14 (or when workflow changes)
 
 ---
 

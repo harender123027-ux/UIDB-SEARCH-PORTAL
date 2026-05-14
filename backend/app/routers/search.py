@@ -62,6 +62,16 @@ def _execute_text_search(body: dict) -> dict:
                 "SELECT id, attributes_manual, attributes_ai FROM submissions ORDER BY created_at DESC"
             ).fetchall()
             for s in subs:
+                att_manual_raw = s["attributes_manual"]
+                att_manual = (
+                    json.loads(att_manual_raw or "{}")
+                    if isinstance(att_manual_raw, str)
+                    else (att_manual_raw or {})
+                )
+                if isinstance(att_manual, str):
+                    att_manual = json.loads(att_manual) if att_manual else {}
+                if att_manual.get("_search_probe"):
+                    continue
                 img_row = conn.execute(
                     """SELECT path FROM images WHERE submission_id = ? ORDER BY CASE image_type
                     WHEN 'face_frontal' THEN 0 WHEN 'face_left' THEN 1 WHEN 'face_right' THEN 2
@@ -70,9 +80,11 @@ def _execute_text_search(body: dict) -> dict:
                     (s["id"],),
                 ).fetchone()
                 photo_path = get_url_path(img_row["path"], is_reference=False) if img_row else None
+                dd_no = att_manual.get("dd_no")
+                label = f"UI Body — DD {dd_no}" if dd_no else "UI Body (Submission)"
                 rows.append({
                     "id": s["id"],
-                    "label": "UI Body (Submission)",
+                    "label": label,
                     "photo_path": photo_path,
                     "attributes_manual": s["attributes_manual"],
                     "attributes_ai": s["attributes_ai"],
@@ -154,7 +166,7 @@ async def search_by_voice(audio: UploadFile = File(...)):
 
 
 def _refs_from_image_matches(matches: list) -> dict:
-    """Return dict ref_id -> { label, photo_path, score }."""
+    """Return dict ref_id -> { label, photo_path, score, result_type, attributes }."""
     out = {}
     for m in matches:
         ref_id = m.get("reference_person_id")
@@ -167,8 +179,8 @@ def _refs_from_image_matches(matches: list) -> dict:
             "photo_path": m.get("photo_path"),
             "score": score,
             "quality": quality,
-            "result_type": "reference",
-            "attributes": m.get("attributes") or {}
+            "result_type": m.get("result_type") or "reference",
+            "attributes": m.get("attributes") or {},
         }
     return out
 
@@ -257,25 +269,25 @@ async def search_combined(
         info = image_refs.get(ref_id) or text_refs.get(ref_id) or voice_refs.get(ref_id)
         label = (info or {}).get("label") or ref_id
         photo_path = (info or {}).get("photo_path")
-        si = (image_refs.get(ref_id) or {}).get("score") or 0
+        si_raw = (image_refs.get(ref_id) or {}).get("score") or 0
         qi = (image_refs.get(ref_id) or {}).get("quality") or 0
         st = (text_refs.get(ref_id) or {}).get("score") or 0
         sv = (voice_refs.get(ref_id) or {}).get("score") or 0
-        if si < FACE_MATCH_THRESHOLD_MEDIUM:
-            si = 0
-
-        overlap = (1 if si > 0 else 0) + (1 if st > 0 else 0) + (1 if sv > 0 else 0)
-        combined_score = max(si, st, sv) if (si or st or sv) else 0
+        # Keep a strong signal for "image modality agreed" without hiding borderline face-only hits.
+        si_for_overlap = si_raw if si_raw >= FACE_MATCH_THRESHOLD_MEDIUM else 0
+        combined_score = max(si_raw, st, sv) if (si_raw or st or sv) else 0
         if combined_score == 0:
             continue
 
         sources = []
-        if si > 0:
+        if si_for_overlap > 0:
             sources.append("image")
         if st > 0:
             sources.append("text")
         if sv > 0:
             sources.append("voice")
+
+        overlap = len(sources)
 
         conf_level = "low"
         if combined_score >= FACE_MATCH_THRESHOLD_STRONG:
@@ -290,7 +302,7 @@ async def search_combined(
             "overlap": overlap,
             "sources": sources,
             "score": combined_score,
-            "score_image": si,
+            "score_image": si_raw,
             "score_text": st,
             "score_voice": sv,
             "quality": qi,
@@ -340,12 +352,15 @@ def get_reference_person(person_id: str):
             # Merge attributes
             att_man = json.loads(sub_row["attributes_manual"] or "{}") if isinstance(sub_row["attributes_manual"], str) else (sub_row["attributes_manual"] or {})
             att_ai = json.loads(sub_row["attributes_ai"] or "{}") if isinstance(sub_row["attributes_ai"], str) else (sub_row["attributes_ai"] or {})
+            display_man = {k: v for k, v in att_man.items() if not str(k).startswith("_")}
+            dd_no = display_man.get("dd_no")
+            label = f"UI Body — DD {dd_no}" if dd_no else "UI Body (Submission)"
 
             return {
                 "id": sub_row["id"],
-                "label": "UI Body (Submission)",
+                "label": label,
                 "photo_path": get_url_path(photo_path, is_reference=False) if photo_path else None,
-                "attributes": {**att_ai, **att_man},
+                "attributes": {**att_ai, **display_man},
                 "attributes_manual": att_man,
                 "attributes_ai": att_ai,
                 "created_at": created_at,

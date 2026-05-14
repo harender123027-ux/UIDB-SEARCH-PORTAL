@@ -19,12 +19,26 @@ from app.storage import get_url_path, save_upload
 
 router = APIRouter()
 
+# Ephemeral rows created by face search / upload-and-match must not appear as gallery hits.
+SEARCH_PROBE_MARKER = "_search_probe"
+
+
+def _submission_ids_flagged_search_probe(conn) -> set[str]:
+    rows = conn.execute(
+        """
+        SELECT id FROM submissions
+        WHERE COALESCE(json_extract(attributes_manual, '$._search_probe'), 0) = 1
+        """
+    ).fetchall()
+    return {r["id"] for r in rows}
+
 
 def _run_match_impl(submission_id: str, audit_user_id: str | None = None, search_target: str = "all"):
     with get_db() as conn:
         row = conn.execute("SELECT id FROM submissions WHERE id = ?", (submission_id,)).fetchone()
         if not row:
             raise HTTPException(404, "Submission not found")
+        probe_submission_ids = _submission_ids_flagged_search_probe(conn)
     points = qdrant_client.get_vectors_by_submission(submission_id)
     if not points:
         return {"submission_id": submission_id, "matches": [], "message": "No face embeddings found for this submission."}
@@ -53,7 +67,12 @@ def _run_match_impl(submission_id: str, audit_user_id: str | None = None, search
             ref_id = payload.get("reference_person_id")
             if not ref_id:
                 ref_id = payload.get("submission_id")
-            if ref_id and ref_id != submission_id and r.get("score") is not None:
+            if (
+                ref_id
+                and ref_id != submission_id
+                and ref_id not in probe_submission_ids
+                and r.get("score") is not None
+            ):
                 score = float(r["score"])
                 if score >= FACE_MATCH_THRESHOLD_MEDIUM:
                     candidate_rows.append((ref_id, score, payload))
@@ -75,28 +94,43 @@ def _run_match_impl(submission_id: str, audit_user_id: str | None = None, search
                     "attributes": json.loads(row["attributes"] or "{}")
                     if isinstance(row["attributes"], str)
                     else (row["attributes"] or {}),
+                    "result_type": "reference",
                 }
             else:
                 sub_row = conn.execute("SELECT id, attributes_manual FROM submissions WHERE id = ?", (ref_id,)).fetchone()
                 if sub_row:
                     img_row = conn.execute(
-                        "SELECT path FROM images WHERE submission_id = ? ORDER BY created_at ASC LIMIT 1",
+                        """SELECT path FROM images WHERE submission_id = ? ORDER BY CASE image_type
+                        WHEN 'face_frontal' THEN 0 WHEN 'face_left' THEN 1 WHEN 'face_right' THEN 2
+                        WHEN 'full_body' THEN 3 ELSE 4 END, created_at ASC LIMIT 1""",
                         (ref_id,),
                     ).fetchone()
                     photo_path = get_url_path(img_row["path"], is_reference=False) if img_row else None
+                    att = (
+                        json.loads(sub_row["attributes_manual"] or "{}")
+                        if isinstance(sub_row["attributes_manual"], str)
+                        else (sub_row["attributes_manual"] or {})
+                    )
+                    display_attrs = {k: v for k, v in att.items() if not str(k).startswith("_")}
+                    dd_no = display_attrs.get("dd_no")
+                    label = f"UI Body — DD {dd_no}" if dd_no else "UI Body (Submission)"
                     refs[ref_id] = {
                         "id": sub_row["id"],
-                        "label": "UI Body (Submission)",
+                        "label": label,
                         "photo_path": photo_path,
-                        "attributes": json.loads(sub_row["attributes_manual"] or "{}")
-                        if isinstance(sub_row["attributes_manual"], str)
-                        else (sub_row["attributes_manual"] or {}),
+                        "attributes": display_attrs,
+                        "result_type": "submission",
                     }
 
     matches = []
-    for rank, (ref_id, score, best_payload, _supporting) in enumerate(aggregated[:20], 1):
+    rank = 0
+    for ref_id, score, best_payload, _supporting in aggregated[:20]:
+        if ref_id not in refs:
+            # Skip orphan vectors whose submission / reference row was deleted.
+            continue
+        rank += 1
         match_id = str(uuid.uuid4())
-        ref_info = refs.get(ref_id) or {"id": ref_id, "label": ref_id, "photo_path": None, "attributes": None}
+        ref_info = refs[ref_id]
         with get_db() as conn:
             conn.execute(
                 "INSERT INTO matches (id, submission_id, reference_person_id, overall_score, face_score, rank, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -119,6 +153,7 @@ def _run_match_impl(submission_id: str, audit_user_id: str | None = None, search
                 "quality_score": best_payload.get("quality_score"),
                 "attributes": ref_info["attributes"],
                 "confidence_level": conf_level,
+                "result_type": ref_info.get("result_type") or "reference",
             }
         )
     return {"submission_id": submission_id, "matches": matches}
@@ -186,10 +221,11 @@ async def _upload_and_match_impl(
         )
     if all_points:
         qdrant_client.upsert_points(all_points)
+    probe_attrs = json.dumps({SEARCH_PROBE_MARKER: True})
     with get_db() as conn:
         conn.execute(
             "INSERT INTO submissions (id, attributes_ai, attributes_manual, face_condition) VALUES (?, ?, ?, ?)",
-            (submission_id, "{}", "{}", "normal"),
+            (submission_id, "{}", probe_attrs, "normal"),
         )
         for im in images:
             conn.execute(
