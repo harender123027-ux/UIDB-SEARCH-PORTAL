@@ -44,12 +44,16 @@ graph TD
 
 ### Frontend Modules
 - **Registration**: Handles multi-angle photo capture and attribute entry for unidentified bodies.
-- **Search**: Multi-modal search interface (Face, Text, Voice).
-- **Criminal Records**: Management of proclaimed offender database.
+- **Search**: Multi-modal search interface (Face, Text, Voice) — Phase 1 scope is the UI-body repository only.
 - **Admin Dashboard**: User management, system monitoring, and geo-mapping configuration.
 
+> **Phase 1 scope note:** Criminal-records / proclaimed-offender management and
+> missing-person matching are **out of scope** for the Gurugram pilot. The
+> backend `/api/criminals` endpoints remain in the codebase but are not exposed
+> in the UI.
+
 ### Backend Modules
-- **`app/routers/`**: Grouped by functional area (auth, submissions, search, match, criminals, admin, geo).
+- **`app/routers/`**: Grouped by functional area (auth, submissions, search, match, admin, geo). The `criminals` router is retained for a future phase but not surfaced in the UI.
 - **`app/services/`**: Core business logic.
     - `face_embedding.py`: Interface for InsightFace model.
     - `qdrant_client.py`: Vector search operations.

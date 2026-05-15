@@ -16,7 +16,7 @@
 | **SIT** | System Integration Testing — IT verifies components (app, DB, object storage, vector DB, TLS, backups) work together on **target hosting**. |
 | **Internal release** | Limited rollout (e.g. Cyber Cell + pilot districts) before public announcement. |
 | **Sign-off** | Written approval by an authorised role that a checklist item or phase is accepted. |
-| **Historic data pilot** | Police-prepared past UI-body / missing-person records uploaded via bulk import (or equivalent) onto UAT/staging for realistic load and match testing. |
+| **Historic data pilot** | Police-prepared past UI-body records uploaded via bulk import (or equivalent) onto UAT/staging for realistic load and match testing. (Missing-person / criminal-records ingestion is out of Phase 1 scope.) |
 | **Accuracy evaluation** | Police-led measurement of whether top matches are **useful leads** (and recording of misses), using agreed sample size and ground truth or blind review. |
 
 ---
@@ -98,12 +98,17 @@ Use one row per scenario; record **Pass / Fail / Blocked**, tester name, and dat
 | S4 | Run match on a submission | Ranked list; confidence bands understandable to officers |
 | S5 | Investigator records match feedback | Stored; visible in audit/history as designed |
 
-### 5.4 Reference / missing persons & criminals (if in scope)
+### 5.4 Reference / missing persons & criminals — out of Phase 1 scope
+
+Criminal-records / proclaimed-offender management and missing-person matching
+are **out of scope** for the Phase 1 Gurugram pilot. Skip the scenarios below
+during Phase 1 UAT; they are retained as forward-looking placeholders for a
+later phase.
 
 | ID | Scenario | Expected result |
 |----|----------|-----------------|
-| R1 | Admin adds reference person with photo | Embeddings stored; searchable |
-| M1 | Criminal record upload and search target `criminal` | Per operational scope |
+| ~~R1~~ | ~~Admin adds reference person with photo~~ | *(deferred)* |
+| ~~M1~~ | ~~Criminal record upload and search target `criminal`~~ | *(deferred)* |
 
 ### 5.5 Admin & governance
 
@@ -143,7 +148,7 @@ Police departments **must** run a realistic historic upload on UAT/staging (not 
 Automated developer tests do **not** prove field accuracy. Police must record outcomes using one or both methods below (agree in advance which applies).
 
 **Method A — Known or closed cases (strongest):**  
-Subset where true identity or correct missing-person link is **already known** to police (closed / traced cases only, with legal clearance). For each query image, note whether correct person appears in **Top 1**, **Top 5**, or **Not in top 5**.
+Subset where the true identity or correct UI-body linkage is **already known** to police (closed / traced cases only, with legal clearance). For each query image, note whether the correct UI-body record appears in **Top 1**, **Top 5**, or **Not in top 5**.
 
 **Method B — Blind expert review (always possible):**  
 Investigating officers review **Top 5** matches for each of **M** sampled cases and mark each candidate: *Useful lead* / *Not useful* / *Cannot judge*. Aggregate **useful lead rate** at rank 1 and within top 5.

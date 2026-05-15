@@ -8,7 +8,7 @@
   "regular": {
     "username": "regularUser",
     "password": "userPass123",
-    "role": "field_officer",
+    "role": "investigator",
     "name": "Regular Test User"
   },
   "users": [

@@ -331,7 +331,13 @@ Trigger matching for a specific submission against the reference database.
 
 ---
 
-## Proclaimed Offenders
+## Proclaimed Offenders — Out of scope for Phase 1
+
+> **Phase 1 scope:** Criminal-records / proclaimed-offender management and
+> missing-person matching are **out of scope** for the Gurugram pilot. The
+> endpoints below are documented for completeness because they remain in the
+> codebase, but no UI exposes them and the Phase 1 search/match flows are
+> restricted to the UI-body repository.
 
 Manage the database of proclaimed offenders and wanted criminals for face recognition matching.
 
@@ -730,7 +736,7 @@ Get audit log entries.
 - `submission.view`
 - `match.review`
 - `feedback.submit`
-- `criminal.create`
+- `criminal.create` *(retained but unused in Phase 1)*
 - `admin.user.create`
 - `admin.user.update`
 

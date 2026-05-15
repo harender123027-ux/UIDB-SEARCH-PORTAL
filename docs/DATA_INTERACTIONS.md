@@ -36,8 +36,8 @@ The PostgreSQL/SQLite database stores metadata, users, and mapping data.
 ### Other Core Tables
 - **`submissions`**: `id`, `created_at`, `attributes_ai`, `attributes_manual`, `face_condition`, `status`
 - **`images`**: `id`, `submission_id`, `image_type`, `path`, `face_condition`, `embedding_confidence`, `quality_score`, `qdrant_point_id`, `created_at`
-- **`reference_persons`**: `id`, `label`, `photo_path`, `attributes`, `created_at`
-- **`criminals`**: `id`, `name`, `fir`, `district`, `station`, `arrest_date`, `notes`, `photo_paths`, `created_by`, `created_at`
+- **`reference_persons`**: `id`, `label`, `photo_path`, `attributes`, `created_at` — *retained but unused in Phase 1 (criminal/missing-person matching out of scope).*
+- **`criminals`**: `id`, `name`, `fir`, `district`, `station`, `arrest_date`, `notes`, `photo_paths`, `created_by`, `created_at` — *retained but unused in Phase 1.*
 - **`audit_log`**: `id`, `user_id`, `action`, `resource_type`, `resource_id`, `ip_address`, `created_at`
 
 ## 2. File Storage
@@ -75,6 +75,13 @@ The system includes a robust migration tool for populating the District/PS maste
 7.  **Audit**: A record is added to the `audit_log`.
 8.  **Completion**: The submission ID is returned to the client.
 
-## 5. Criminal Record Matching
+## 5. Criminal Record Matching — Out of scope for Phase 1
 
-CCTV/Surveillance matching follows a similar flow but queries the existing criminal collection in Qdrant instead of inserting new records.
+Criminal-records / proclaimed-offender matching (e.g. for CCTV / surveillance
+use cases) and missing-person matching are **out of scope** for the Phase 1
+Gurugram pilot. The supporting tables (`criminals`, `reference_persons`) and
+the Qdrant `reference_*` payload flag remain in the codebase, but no UI is
+exposed and the search endpoints are restricted to the UI-body repository.
+
+To reintroduce the feature in a later phase, re-enable the "Search In"
+selector in `ubis-pwa.jsx` and re-mount the `CriminalRecords` admin tab.

@@ -68,10 +68,13 @@
     <p>FastAPI. Handles submissions, face embedding, vector search, attribute/voice search. Persists to SQLite and Qdrant.</p>
     <h3>Data flow</h3>
     <div class="flow">Photo upload → InsightFace embedding (512-d) → Qdrant vector DB
-Text/voice → keyword extraction → attribute filter on reference_persons
+Text/voice → keyword extraction → attribute filter on UI-body submissions
 Combined search → merge by overlap (how many inputs matched) → sort by confidence</div>
-    <h3>Repository</h3>
-    <p>Reference persons (missing persons) stored in SQLite + face embeddings in Qdrant. Seed script loads images from <code>reference_photos/</code> and indexes them.</p>
+    <h3>Repository (Phase 1 scope)</h3>
+    <p>UI-body submissions stored in SQLite + face embeddings in Qdrant.
+    Reference-person tables (<code>reference_persons</code>, <code>criminals</code>) and the
+    <code>reference_photos/</code> seed flow are retained in the codebase but are
+    <strong>out of scope for Phase 1</strong> (criminal-database and missing-person matching are deferred).</p>
 
     <h2>Tech stack</h2>
     <div class="tech-grid">
@@ -96,7 +99,7 @@ Combined search → merge by overlap (how many inputs matched) → sort by confi
     <p><strong>One simple flow:</strong> Add any combination of photo, text description, or voice note. Click Search. All inputs are run against the repository; results merged by overlap (how many modalities matched) and confidence. Voice is transcribed via Whisper before search.</p>
 
     <h2><span class="badge badge-schema">Schemas</span></h2>
-    <p>Reference view: PostgreSQL tables (cases, persons, images, matches, feedback, missing_persons, users, audit_log), Qdrant collections, Blob storage layout.</p>
+    <p>Reference view: PostgreSQL tables (cases, persons, images, matches, feedback, users, audit_log), Qdrant collections, Blob storage layout. The <code>missing_persons</code> / <code>criminals</code> / <code>reference_persons</code> tables remain documented in the catalog for forward compatibility but are <strong>not used in Phase 1</strong>.</p>
 
     <h2><span class="badge badge-audit">Audit Log</span></h2>
     <p>INSERT-only trail. Every submission, match, feedback recorded with timestamp, action, resource.</p>

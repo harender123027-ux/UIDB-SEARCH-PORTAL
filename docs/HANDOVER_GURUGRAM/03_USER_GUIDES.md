@@ -20,7 +20,6 @@ As an admin you can:
 - View the dashboard with case counts, match counts, recent activity.
 - Read the full audit log.
 - Manage the district / police-station master (when the IT team has loaded the master file).
-- Manage the criminals / proclaimed-offenders list.
 
 ---
 
@@ -91,9 +90,14 @@ This is usually a one-off setup task done by the IT team. As an admin you can:
 
 ---
 
-## How to manage criminals / proclaimed-offenders
+## Out of scope for Phase 1
 
-Admin → **Criminals** → **Add criminal**. Upload a clear face photo, name, FIR reference, charges. The system creates a vector embedding so any future UI-body match against this person is flagged.
+Criminal-records / proclaimed-offender management and missing-person matching
+are **out of scope** for the Phase 1 Gurugram pilot. UBIS Phase 1 is limited to
+unidentified-body (UI body) registration and search. The backend retains the
+underlying tables and endpoints so the feature can be reintroduced in a later
+phase, but no UI is exposed and the dropdown for "search target" has been
+removed accordingly.
 
 ---
 
@@ -107,7 +111,7 @@ Admin → **Criminals** → **Add criminal**. Upload a clear face photo, name, F
 
 ## Reading a match shortlist
 
-When an investigator runs a face match on an unidentified body, the case detail page shows up to 10 ranked candidates from the missing-person reference gallery and the criminals master. For each candidate you see:
+When an investigator runs a face match on an unidentified body, the case detail page shows up to 10 ranked candidates from the UI-body submissions repository (Phase 1 scope). For each candidate you see:
 
 | Column | What it means |
 |---|---|
@@ -135,8 +139,8 @@ Useful for:
 
 ## When something looks wrong
 
-- **A match score of 0.95 against a recent UI body and a missing-person record**: very strong lead. Tell the investigator to bring in family for in-person ID immediately. Capture in the case notes.
-- **No matches at all on a clear face photo**: the gallery may be sparse. Encourage the data-entry team to keep loading historical missing-person records (`08_BULK_IMPORT_SOP_FOR_DATA_ENTRY.md`).
+- **A match score of 0.95 against another recent UI-body record**: very strong lead that the same body or a closely related case has been registered before. Tell the investigator to bring in family for in-person ID immediately. Capture in the case notes.
+- **No matches at all on a clear face photo**: the UI-body repository may be sparse. Encourage the data-entry team to keep loading historical UI-body records (`08_BULK_IMPORT_SOP_FOR_DATA_ENTRY.md`).
 - **The same UI body appears matched to many candidates with similar scores**: the photo quality is probably poor. Ask the field officer to retake (`12_USER_GUIDE_FIELD_OFFICER.md`).
 
 ---
@@ -235,7 +239,7 @@ Use this when a citizen comes to the station with limited information ("woman in
 3. The system searches across attributes (gender, age range, district, date, build, clothing, marks) and returns matching cases.
 4. Click any result to open the case.
 
-For face-photo search (you have a photo of a missing person and want to see if any UI body matches), use **Search → Face**.
+For face-photo search (you have a photo and want to see if any UI body in the repository matches), use **Search → Face**.
 
 ---
 
@@ -249,7 +253,7 @@ For face-photo search (you have a photo of a missing person and want to see if a
 
 ## When something looks wrong
 
-- **No matches even on a clear photo**: the missing-person gallery may not yet have a record for this person. Encourage the data-entry team to keep loading.
+- **No matches even on a clear photo**: the UI-body repository may not yet have a corresponding record. Encourage the data-entry team to keep loading historical UI-body cases.
 - **Same person showing up against many UI bodies**: feedback "Wrong person" — this teaches the system.
 - **A case won't save**: the file might be too large (> 10 MB). Resize the photo and retry.
 - **System is slow**: tell IT — they will check `bash scripts/onprem/ubis-status.sh`.

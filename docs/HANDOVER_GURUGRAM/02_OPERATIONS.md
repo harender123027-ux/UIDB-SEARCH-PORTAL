@@ -171,10 +171,10 @@ UBIS does not back itself up. Run `ubis-backup.sh` nightly via cron and copy the
 
 | Inside the tarball | Source | Why |
 |---|---|---|
-| `ubis.db` | `./data/db/ubis.db` (lite profile) | Users, cases, audit log, criminals. |
+| `ubis.db` | `./data/db/ubis.db` (lite profile) | Users, UI-body cases, audit log, geo masters. |
 | `postgres.sql` | `pg_dump` of the `postgres` container (full profile) | Same as above for Postgres deployments. |
-| `data/uploads/` | `./data/uploads/` | Case photos. |
-| `data/reference_photos/` | `./data/reference_photos/` | Missing-person reference gallery. |
+| `data/uploads/` | `./data/uploads/` | UI-body case photos. |
+| `data/reference_photos/` | `./data/reference_photos/` | Reserved — reference-photo gallery is out of Phase 1 scope. |
 | `data/qdrant/` | `./data/qdrant/` | Vector index — without this, search has to be re-built. |
 | `data/models/` | `./data/models/` | InsightFace + AdaFace weights (large but downloadable). |
 | `dot.env` | `./.env` | So a restore on a new server keeps the same `JWT_SECRET`. |
@@ -453,7 +453,7 @@ Schedule rotation reminders in your team's calendar.
 
 ## 8. Public-facing search (DO NOT enable without approval)
 
-UBIS supports a public search mode (text / voice / photo by missing-person family). It is **off** in this on-prem package by default because exposing the system to the public internet has legal and operational implications. Before enabling:
+UBIS has codepaths for a public search mode (text / voice / photo lookup against the UI-body repository — historically intended for missing-person family search, which is **out of Phase 1 scope**). It is **off** in this on-prem package by default because exposing the system to the public internet has legal and operational implications. Before enabling:
 
 1. Get written approval from your authorising officer.
 2. Place the system behind a public-facing reverse proxy with WAF (Web Application Firewall) protection.

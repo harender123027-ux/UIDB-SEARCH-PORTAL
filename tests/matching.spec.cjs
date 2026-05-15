@@ -36,8 +36,10 @@ test.describe("UBIS Search", () => {
     await expect(page.getByText("Voice note (optional)")).toBeVisible();
     await expect(searchSubmitBtn(page)).toBeDisabled();
     await expect(page.getByPlaceholder(/male, 25/)).toBeVisible();
-    
-    // Search In should be hidden for public users
+
+    // The "Search In" radio was removed for the Phase 1 Gurugram pilot
+    // (criminal / missing-person matching is out of scope), so it must not
+    // appear for any user.
     await expect(page.getByText("Search In")).not.toBeVisible();
   });
 

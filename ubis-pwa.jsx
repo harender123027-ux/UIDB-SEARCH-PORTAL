@@ -1147,7 +1147,10 @@ function SearchTab({ user }) {
   const [feedback, setFeedback] = useState({});
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(null);
   const [error, setError] = useState(null);
-  const [searchTarget, setSearchTarget] = useState("ui_body"); // default to 'ui_body' instead of 'all'
+
+  // Phase 1 scope: search is restricted to UI Bodies. Criminal/missing-person
+  // matching is out of scope for this release.
+  const SEARCH_TARGET = "ui_body";
 
   const hasInput = photo || (description || "").trim() || voice;
 
@@ -1160,7 +1163,7 @@ function SearchTab({ user }) {
       if (photo) formData.append("files", photo);
       if (description.trim()) formData.append("query", description.trim());
       if (voice) formData.append("audio", voice);
-      formData.append("search_target", searchTarget);
+      formData.append("search_target", SEARCH_TARGET);
       const res = await apiFetch("/api/search/combined", { method: "POST", body: formData });
       if (!res.ok) throw new Error(res.statusText);
       const data = await res.json();
@@ -1230,22 +1233,6 @@ function SearchTab({ user }) {
               </div>
             )}
           </div>
-          {user && (
-            <div>
-              <label style={{ display: "block", fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Search In</label>
-              <div style={{ display: "flex", gap: 16 }}>
-                {[
-                  { id: "all", label: "All Databases" },
-                  { id: "ui_body", label: "UI Bodies" },
-                ].map(t => (
-                  <label key={t.id} style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12, color: C.text, fontFamily: C.mono }}>
-                    <input type="radio" name="searchTarget" value={t.id} checked={searchTarget === t.id} onChange={() => setSearchTarget(t.id)} />
-                    {t.label}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
           <button onClick={runSearch} disabled={!hasInput || loading}
             style={{ padding: "12px 24px", background: hasInput ? C.emerald : C.border, color: "#fff", border: "none", fontFamily: C.mono, fontSize: 13, fontWeight: 700, borderRadius: 6, cursor: hasInput && !loading ? "pointer" : "not-allowed" }}>
             {loading ? "Searching…" : "Search"}
@@ -1820,7 +1807,7 @@ function AdminUIBodies() {
 }
 
 // ─── USER MANAGEMENT (ADMIN) ──────────────────────────────────────────────────
-const ROLES = ["field_officer", "investigator", "supervisor", "admin", "public_user"];
+const ROLES = ["investigator", "admin"];
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -1828,7 +1815,7 @@ function UserManagement() {
   const [error, setError] = useState("");
   const [addOpen, setAddOpen] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [addForm, setAddForm] = useState({ username: "", password: "", name: "", role: "field_officer", district_id: "", station_id: "" });
+  const [addForm, setAddForm] = useState({ username: "", password: "", name: "", role: "investigator", district_id: "", station_id: "" });
   const [editForm, setEditForm] = useState({ name: "", role: "", is_active: true, password: "", district_id: "", station_id: "" });
   const [districts, setDistricts] = useState([]);
   const [stations, setStations] = useState([]);
@@ -1877,7 +1864,7 @@ function UserManagement() {
         station_id: addForm.station_id || null,
       });
       setAddOpen(false);
-      setAddForm({ username: "", password: "", name: "", role: "field_officer", district_id: "", station_id: "" });
+      setAddForm({ username: "", password: "", name: "", role: "investigator", district_id: "", station_id: "" });
       load();
     } catch (r) {
       const data = await r.json?.().catch(() => ({}));
@@ -2209,7 +2196,7 @@ function AboutTab() {
         <ul style={{ paddingLeft: 20, fontSize: 13, lineHeight: 1.6 }}>
           <li><strong>AdaFace Integration</strong>: High-accuracy facial embeddings optimized for low-quality surveillance footage.</li>
           <li><strong>Quality Scoring</strong>: Real-time image quality assessment (L2 Norm) to ensure biometric reliability.</li>
-          <li><strong>Multi-Target Search</strong>: Combined matching across UI Bodies, Criminal Databases, and Missing Persons.</li>
+          <li><strong>UI Body Search</strong>: Face, attribute and voice-note matching against unidentified-body submissions.</li>
           <li><strong>Robust Fallback</strong>: Center-crop fallback ensures processing even when detection landmarks are missing.</li>
         </ul>
       </div>
@@ -2260,134 +2247,10 @@ function AboutTab() {
   );
 }
 
-// ─── ROOT APP ─────────────────────────────────────────────────────────────────
-function CriminalRecords() {
-  const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [addOpen, setAddOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", fir: "", district: "", station: "", arrest_date: "", notes: "" });
-  const [districts, setDistricts] = useState([]);
-  const [stations, setStations] = useState([]);
-  const [districtId, setDistrictId] = useState("");
-  const [stationId, setStationId] = useState("");
-  const [photos, setPhotos] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
-
-  const loadDistricts = () =>
-    api.get("/api/geo/districts").then((d) => { setDistricts(Array.isArray(d) ? d : []); }).catch(() => setDistricts([]));
-  const loadStations = (districtId) => {
-    if (!districtId) { setStations([]); return; }
-    api.get(`/api/geo/districts/${districtId}/stations`).then((s) => { setStations(Array.isArray(s) ? s : []); }).catch(() => setStations([]));
-  };
-
-  const loadRecords = () => {
-    setLoading(true);
-    api.get("/api/criminals").then((data) => { setRecords(Array.isArray(data) ? data : []); setError(""); }).catch(() => { setRecords([]); setError("Failed to load records"); }).finally(() => setLoading(false));
-  };
-
-  useEffect(() => { loadRecords(); loadDistricts(); }, []);
-
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    setUploadError("");
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("fir", form.fir);
-      formData.append("district", form.district);
-      formData.append("station", form.station);
-      formData.append("arrest_date", form.arrest_date);
-      formData.append("notes", form.notes);
-      photos.forEach((file) => formData.append("photos", file));
-      await api.post("/api/criminals", formData);
-      setAddOpen(false);
-      setForm({ name: "", fir: "", district: "", station: "", arrest_date: "", notes: "" });
-      setPhotos([]);
-      loadRecords();
-    } catch (err) {
-      setUploadError("Failed to upload record");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  return (
-    <div>
-      <SectionLabel label="Criminal Records — Arrest Data Upload" />
-      <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 24, fontSize: 14, color: C.primary }}>
-        Upload arrest data and photos for criminals. These records will be searchable (e.g., for CCTV face matches).
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <button type="button" onClick={() => setAddOpen(true)} style={{ padding: "10px 20px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-          + Add Criminal Record
-        </button>
-      </div>
-      {addOpen && (
-        <div style={{ marginBottom: 24, padding: 20, background: C.card, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.primary, marginBottom: 16 }}>New Criminal Record</div>
-          <form onSubmit={handleAdd} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 400 }}>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Name</label>
-              <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>FIR Number</label>
-              <input type="text" value={form.fir} onChange={e => setForm(f => ({ ...f, fir: e.target.value }))} style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>District</label>
-              <select value={districtId} onChange={e => {
-                const id = e.target.value;
-                setDistrictId(id);
-                setStationId("");
-                const d = districts.find(x => x.id === id);
-                setForm(f => ({ ...f, district: d?.name || "" }));
-                setForm(f => ({ ...f, station: "" }));
-                loadStations(id);
-              }} style={{ width: "100%", marginTop: 4, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }}>
-                <option value="">— select —</option>
-                {districts.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Police Station</label>
-              <select value={stationId} onChange={e => {
-                const id = e.target.value;
-                setStationId(id);
-                const s = stations.find(x => x.id === id);
-                setForm(f => ({ ...f, station: s?.name || "" }));
-              }} disabled={!districtId} style={{ width: "100%", marginTop: 4, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, opacity: districtId ? 1 : 0.6 }}>
-                <option value="">— select —</option>
-                {stations.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Arrest Date</label>
-              <input type="date" value={form.arrest_date} onChange={e => setForm(f => ({ ...f, arrest_date: e.target.value }))} style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Notes</label>
-              <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={2} style={{ width: "100%", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, resize: "vertical" }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Photos (multiple allowed)</label>
-              <input type="file" accept="image/*" multiple onChange={e => setPhotos(Array.from(e.target.files))} style={{ marginTop: 4 }} />
-              <div style={{ fontSize: 10, color: C.textDim, marginTop: 4 }}>{photos.length} photo(s) selected</div>
-            </div>
-            {uploadError && <div style={{ marginBottom: 8, color: C.rose, fontSize: 12 }}>{uploadError}</div>}
-            <div style={{ display: "flex", gap: 8 }}>
-              <button type="submit" disabled={uploading} style={{ padding: "9px 18px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: uploading ? "not-allowed" : "pointer" }}>Save</button>
-              <button type="button" onClick={() => { setAddOpen(false); setUploadError(""); }} style={{ padding: "9px 18px", background: C.borderLight, color: C.text, border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>Cancel</button>
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
-  );
-}
+// NOTE: Criminal-records management and missing-person matching are out of
+// scope for the Phase 1 Gurugram pilot. The CriminalRecords component was
+// removed here; backend endpoints under /api/criminals remain in the codebase
+// but are not exposed in the UI.
 
 // ─── ROOT APP ─────────────────────────────────────────────────────────────────
 export default function App() {

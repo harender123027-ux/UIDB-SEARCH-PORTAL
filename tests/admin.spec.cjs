@@ -12,14 +12,15 @@ test.describe('Admin UI Features', () => {
         await expect(page.locator('button:has-text("User Management")')).toBeVisible({ timeout: 10000 });
     });
 
-    test('Admin user can see User Management tab and Search In filters', async ({ page }) => {
+    test('Admin user can see User Management tab', async ({ page }) => {
         // Admin should see User Management tab
         const userManagementTab = page.locator('button:has-text("User Management")');
         await expect(userManagementTab).toBeVisible();
 
-        // Admin should see Search In filters
+        // The "Search In" radio (criminal vs UI-body) was removed in Phase 1
+        // scope. The search form should now show only the input controls.
         await page.locator('button:has-text("Search")').first().click();
-        await expect(page.getByText("Search In")).toBeVisible();
+        await expect(page.getByText("Search In")).not.toBeVisible();
     });
 
     test('Admin user can access admin users table', async ({ page }) => {

@@ -31,6 +31,7 @@ Recent technical and documentation updates include: alignment of bulk import wit
 5. Scope boundaries and limitations
 The following should be treated as explicit limitations for the current product baseline:
 
+- Phase 1 scope is restricted to unidentified-body (UI body) registration, attribute capture and within-repository matching. Criminal-records / proclaimed-offender management and missing-person matching are explicitly out of scope for this release.
 - No integration with national criminal records or federated platforms (for example CCTNS or ZIPNET) is implemented in this codebase.
 - Fingerprint, DNA, and other non-face biometric workflows are not in scope.
 - There is no forensic “reconstruction” pipeline for still or moving scene imagery beyond recognition and retrieval on supplied photographs.

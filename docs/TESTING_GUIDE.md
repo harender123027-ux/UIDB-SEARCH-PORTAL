@@ -126,7 +126,7 @@ pytest tests/test_auth.py::test_login_success -v
 | `test_submissions.py` | Case creation, listing, retrieval |
 | `test_search.py` | Multi-modal search functionality |
 | `test_match.py` | Face matching against references |
-| `test_criminals.py` | Proclaimed offenders CRUD |
+| `test_criminals.py` | Proclaimed offenders CRUD *(out of Phase 1 scope; tests retained for the underlying endpoints)* |
 | `test_dashboard.py` | Dashboard statistics |
 | `test_audit.py` | Audit log creation and retrieval |
 | `test_geo_mapping.py` | Districts and police stations |
@@ -231,7 +231,7 @@ npx playwright show-report
 | `dashboard.spec.cjs` | Dashboard access and display |
 | `admin.spec.cjs` | User management (admin only) |
 | `new-case.spec.cjs` | Case creation workflow |
-| `criminal-records.spec.cjs` | Proclaimed offenders management |
+| `criminal-records.spec.cjs` | Proclaimed offenders management *(out of Phase 1 scope; may be skipped)* |
 | `matching.spec.cjs` | Search and matching tests |
 
 ### 4.3 Playwright Configuration

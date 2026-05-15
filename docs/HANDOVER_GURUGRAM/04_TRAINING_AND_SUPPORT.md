@@ -201,7 +201,7 @@ After login, use the UI (User menu → Change password) to set the real password
 
 ### Match scores are all very low (< 0.3)
 
-- The reference gallery may not yet have the person. Continue loading historical missing-person records (`08_BULK_IMPORT_SOP_FOR_DATA_ENTRY.md`).
+- The UI-body repository may not yet have a corresponding record. Continue loading historical UI-body cases (`08_BULK_IMPORT_SOP_FOR_DATA_ENTRY.md`).
 - The query photo quality is poor. Retake.
 
 ### Same person matched against many UI bodies
