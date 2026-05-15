@@ -54,21 +54,74 @@ Imported 2 submissions.
 ## Run the demo import against the on-prem stack
 
 If you have the stack running via `docker-compose.onprem.yml` (see
-[`docs/HANDOVER_GURUGRAM/README.md`](../docs/HANDOVER_GURUGRAM/README.md)),
-copy this folder into the backend container and run the script inside it:
+[`docs/HANDOVER_GURUGRAM/README.md`](../docs/HANDOVER_GURUGRAM/README.md)):
+
+> **Lite-profile gotcha.** In the default `lite` profile, Qdrant runs
+> *embedded* inside the backend process and holds an **exclusive file
+> lock** on `/app/qdrant_data`. If you `docker exec` the bulk-import
+> script while the backend is up, the script silently fails to write
+> face embeddings to Qdrant — rows land in SQLite, text search works,
+> but **face-photo search will not find the imported rows**.
+>
+> Use one of the two patterns below.
+
+### A. Stop backend → import → start backend (recommended, lite profile)
 
 ```bash
-# Copy sample bundle into the backend container
-docker cp sample_import_images ubis-backend:/tmp/
+# 1. Stop the backend so the importer can take the Qdrant lock
+docker compose -f docker-compose.onprem.yml --profile lite stop backend
 
-# Run the importer inside the container
+# 2. Run the importer in a one-off container that mounts the same
+#    data volumes the backend uses.
+docker run --rm \
+    -v "$PWD/data/db:/app/data" \
+    -v "$PWD/data/uploads:/app/uploads" \
+    -v "$PWD/data/qdrant:/app/qdrant_data" \
+    -v "$PWD/data/models:/app/models" \
+    -v "$PWD/sample_import_images:/tmp/sample_import_images:ro" \
+    -e SQLITE_PATH=/app/data/ubis.db \
+    -e SUBMISSIONS_STORAGE_PATH=/app/uploads \
+    -e QDRANT_URL=/app/qdrant_data \
+    -e QDRANT_COLLECTION=face_embeddings \
+    ubis/backend:onprem \
+    python -m scripts.bulk_import_ui_bodies \
+        /tmp/sample_import_images/demo.csv \
+        /tmp/sample_import_images
+
+# 3. Bring the backend (and Qdrant lock) back up
+docker compose -f docker-compose.onprem.yml --profile lite start backend
+```
+
+Replace `docker` with `podman` (or `sudo docker`) to match your host.
+
+### B. Full profile (Qdrant runs as a separate container/service)
+
+When `QDRANT_URL` is an HTTP/gRPC endpoint instead of a local path, the
+importer and the backend can both talk to Qdrant concurrently. With the
+backend running, `docker exec` is safe:
+
+```bash
+docker cp sample_import_images ubis-backend:/tmp/
 docker exec -it ubis-backend \
     python -m scripts.bulk_import_ui_bodies \
         /tmp/sample_import_images/demo.csv \
         /tmp/sample_import_images
 ```
 
-Replace `docker` with `podman` (or `sudo docker`) to match your host.
+### How to tell the import was complete (face embeddings really in Qdrant)
+
+```bash
+docker exec ubis-backend python -c "
+import sqlite3
+from app.services import qdrant_client
+q = qdrant_client.get_client()
+c = sqlite3.connect('/app/data/ubis.db')
+qids = [r[0] for r in c.execute(\"SELECT i.qdrant_point_id FROM images i JOIN submissions s ON i.submission_id=s.id WHERE s.attributes_manual LIKE '%DDR-DEMO-%' AND i.qdrant_point_id IS NOT NULL\")]
+pts = q.retrieve(collection_name='face_embeddings', ids=qids, with_vectors=False)
+print(f'demo qdrant_point_ids in SQLite: {len(qids)}  /  present in Qdrant: {len(pts)}')
+"
+# Expected: '5 / 5' after a clean import of the 2 demo rows.
+```
 
 ## Verify
 
@@ -76,9 +129,15 @@ After the import succeeds:
 
 1. Open the UBIS web UI (default `http://<host>:8080`).
 2. Log in as `admin` (password is in `.env`).
-3. Click **Search**, type `male` in the description box, click **Search**.
-4. You should see `DDR-DEMO-001-2026` and `DDR-DEMO-002-2026` in the
+3. Click **Search**, type `DDR-DEMO` (or `male`) in the description
+   box, click **Search**. Both demo cases should appear in the
    shortlist with their photos.
+4. **Face search:** click **Search**, upload
+   `sample_import_images/images/case2/face_front.png`, click **Search**.
+   `DDR-DEMO-002-2026` should come back at rank 1 with a `high`
+   confidence score around `1.000` (the probe and the indexed image
+   are the same file). This step is the real proof that the face
+   embeddings made it into Qdrant.
 
 ## Cleaning up
 

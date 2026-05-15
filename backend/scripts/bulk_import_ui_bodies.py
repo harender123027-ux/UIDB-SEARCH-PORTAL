@@ -32,7 +32,18 @@ def import_bulk_csv(csv_path: str, images_dir: str):
 
     # Initialize DB and Qdrant
     init_db()
-    qdrant_client.ensure_collection()
+    if not qdrant_client.ensure_collection():
+        print(
+            "ERROR: Could not connect to Qdrant. In the on-prem 'lite' profile "
+            "the embedded Qdrant store holds an exclusive file lock while the "
+            "backend container is running, which prevents this importer from "
+            "writing face embeddings. Stop the backend container first, run "
+            "the importer in a one-off container that mounts the same data "
+            "volumes, then start the backend back up. See "
+            "sample_import_images/README.md for the exact commands.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
 
     with open(csv_path, encoding='utf-8') as f:
         reader = csv.DictReader(f)
