@@ -1,6 +1,14 @@
 # UBIS — Unidentified Body Identification System
 
-Law-enforcement web application for unidentified-body registration, face matching, text/voice search, and proclaimed-offender workflows.
+Law-enforcement web application for unidentified-body (UI body) registration,
+face / attribute / voice search, and case management. Built for the
+Haryana Police Gurugram pilot.
+
+> **Phase 1 scope:** UI-body registration and within-repository matching.
+> Criminal-records / proclaimed-offender management and missing-person
+> matching are deferred to a later phase — the underlying tables and
+> `/api/criminals` endpoints stay in the codebase but are not exposed in
+> the UI.
 
 ## Public demo (reference only)
 
@@ -21,7 +29,19 @@ Production police deployments should use **on-prem** install below, not these UR
 
 ---
 
-## Documentation (remaining)
+## Sample data (try the pipeline end-to-end)
+
+| File / folder | Use for |
+|---------------|---------|
+| [`sample_import_images/`](sample_import_images/) | Ready-to-run bulk-import demo: `demo.csv` plus two cases of real face photos. See [`sample_import_images/README.md`](sample_import_images/README.md) for the one-command import. |
+| [`ui_body_template.csv`](ui_body_template.csv) | Full bulk-import template with 5 realistic Haryana sample rows showing every column. |
+| [`ui_body_template.xlsx`](ui_body_template.xlsx) | Excel version of the same template (with dropdown validation) for data-entry teams. |
+| [`Police Station_District_Haryana.xlsx`](Police%20Station_District_Haryana.xlsx) | District / police-station master used by the geo-mapping seed. |
+| [`sample_test_images/`](sample_test_images/) | Loose portrait photos for ad-hoc Search-tab testing. |
+
+---
+
+## Documentation
 
 | Document | Description |
 |----------|-------------|
