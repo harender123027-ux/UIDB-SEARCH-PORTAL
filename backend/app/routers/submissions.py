@@ -12,22 +12,73 @@ from app.storage import get_url_path, save_upload
 
 router = APIRouter()
 
-# No reliable face box: still store image + weak/full-image embedding for search pipeline.
+# Image types where the photo is not expected to contain a face. For these
+# slots the embedding pipeline still produces a weak/full-image vector that
+# powers the visual-search shortlist, but the strict "must contain a face"
+# gate below is bypassed.
 _RELAXED_FACE_DETECTION_TYPES = frozenset({"belonging", "clothing", "tattoo", "other"})
 
+# Face conditions where the body's face genuinely may not be detectable
+# (decomposed, burnt, partially missing, etc.). On these submissions we
+# accept face-slot uploads even if the detector finds nothing, so the
+# operator is not blocked from registering legitimate cases.
+_FACE_DETECTION_REQUIRED_CONDITIONS = frozenset({"normal"})
 
-def process_images(submission_id: str, files: list, image_types: list):
-    """Save files, run face embedding per image, upsert to Qdrant. Returns list of image records. files are UploadFile."""
-    images = []
-    all_points = []
+
+def _slot_label(image_type: str) -> str:
+    return image_type.replace("_", " ")
+
+
+def process_images(
+    submission_id: str,
+    files: list,
+    image_types: list,
+    face_condition: str = "normal",
+):
+    """Save files, run face embedding per image, upsert to Qdrant.
+
+    Two-pass design: first read every upload and run face embedding, validating
+    that face-slot photos actually contain a detectable face when
+    ``face_condition == "normal"``. Only after every file passes do we write
+    anything to disk or Qdrant, so a single bogus face photo cannot leave
+    half-saved files or stale Qdrant points behind.
+    """
+    enforce_for_condition = face_condition in _FACE_DETECTION_REQUIRED_CONDITIONS
+
+    prepared: list[dict] = []
     for f, img_type in zip(files, image_types, strict=False):
         content = f.file.read()
         ext = (f.filename or "jpg").split(".")[-1].lower() or "jpg"
+        face_required = (
+            img_type not in _RELAXED_FACE_DETECTION_TYPES and enforce_for_condition
+        )
+        embeddings = extract_embeddings_from_bytes(
+            content, img_type, enforce_detection=face_required
+        )
+        if face_required and not embeddings:
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    f"No face could be detected in the uploaded "
+                    f"'{_slot_label(img_type)}' image. Please retake the "
+                    f"photo with the face clearly visible, or set the "
+                    f"face condition to 'partial', 'bloated', or "
+                    f"'damaged' if the body's face is not recoverable."
+                ),
+            )
+        prepared.append({"content": content, "ext": ext, "img_type": img_type, "embeddings": embeddings})
+
+    images = []
+    all_points = []
+    for item in prepared:
+        content = item["content"]
+        img_type = item["img_type"]
+        ext = item["ext"]
+        embeddings = item["embeddings"]
+
         rel_path = save_upload(content, submission_id, img_type, ext)
         image_id = str(uuid.uuid4())
-        enforce_face = img_type not in _RELAXED_FACE_DETECTION_TYPES
-        embeddings = extract_embeddings_from_bytes(content, img_type, enforce_detection=enforce_face)
-        point_ids = []
+        point_ids: list[str] = []
         for emb_data in embeddings:
             emb = emb_data["embedding"]
             conf = emb_data["confidence"]
@@ -56,11 +107,6 @@ def process_images(submission_id: str, files: list, image_types: list):
             "quality_score": embeddings[0]["quality"] if embeddings else None,
             "qdrant_point_id": qdrant_point_id,
         })
-        if len(point_ids) > 1:
-            for pid in point_ids[1:]:
-                idx = next(i for i, p in enumerate(all_points) if p["id"] == pid)
-                all_points[idx]["payload"]["image_id"] = image_id
-        # already added first; rest are already in all_points
     if all_points:
         qdrant_client.upsert_points(all_points)
     return images
@@ -87,7 +133,7 @@ async def create_submission(
         att_man = json.loads(attributes_manual) if attributes_manual else {}
     except json.JSONDecodeError:
         att_ai, att_man = {}, {}
-    images = process_images(submission_id, files, image_types_list)
+    images = process_images(submission_id, files, image_types_list, face_condition)
     with get_db() as conn:
         conn.execute(
             "INSERT INTO submissions (id, attributes_ai, attributes_manual, face_condition) VALUES (?, ?, ?, ?)",

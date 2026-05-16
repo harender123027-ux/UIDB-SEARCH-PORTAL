@@ -33,6 +33,29 @@ def reset_feedback_rate_limit():
     yield
 
 
+@pytest.fixture(autouse=True)
+def stub_face_embedding(monkeypatch):
+    """Replace the face-embedding extractor with a deterministic 512-d unit
+    vector by default, so unit tests that POST blank/fixture JPEGs to
+    /api/submissions can exercise routing/persistence without needing real
+    face images. Tests that want to assert the no-face rejection path can
+    override this with their own ``monkeypatch.setattr(...)`` to return [].
+    The real AI pipeline is exercised separately in test_matching_e2e.py.
+    """
+    import numpy as np
+
+    import app.routers.submissions as _submissions
+
+    vec = np.zeros(512, dtype=np.float32)
+    vec[0] = 1.0
+    stub_result = [{"embedding": vec, "confidence": 0.9, "quality": 1.0}]
+    monkeypatch.setattr(
+        _submissions, "extract_embeddings_from_bytes",
+        lambda *a, **kw: list(stub_result),
+    )
+    yield
+
+
 @pytest.fixture
 def client():
     from app.database import init_db
