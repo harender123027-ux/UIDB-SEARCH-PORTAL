@@ -676,14 +676,21 @@ function NewCase() {
     if (file.size < 50 * 1024) {
       setQualityMsg(prev => ({ ...prev, [slotId]: "⚠️ Low quality: File size is very small. Try a closer shot." }));
     } else {
-      setQualityMsg(prev => ({ ...prev, [slotId]: "Checking quality..." }));
+      setQualityMsg(prev => ({ ...prev, [slotId]: "Checking image…" }));
     }
 
     const url = URL.createObjectURL(file);
     setSlotPreview(prev => ({ ...prev, [slotId]: url }));
     setSlotFiles(prev => ({ ...prev, [slotId]: file }));
 
-    // 2. Advanced checks (Resolution & Brightness)
+    // The browser-side checks below only catch obviously broken files
+    // (tiny size, low resolution, totally dark or blown-out). They cannot
+    // tell whether a face is actually visible — that gate runs on the
+    // server when the form is submitted, so we deliberately avoid claiming
+    // "quality looks good" here.
+    const slot = IMAGE_SLOTS.find(s => s.id === slotId);
+    const isFaceSlot = slot?.uploadType?.startsWith("face_") || slot?.uploadType === "full_body";
+
     const img = new Image();
     img.onload = () => {
       let msg = "";
@@ -707,7 +714,11 @@ function NewCase() {
       if (avg < 40) msg = "⚠️ Image is too dark. Increase lighting.";
       else if (avg > 230) msg = "⚠️ Image is overexposed. Decrease lighting.";
 
-      if (!msg && file.size >= 50 * 1024) msg = "✓ Quality looks good.";
+      if (!msg && file.size >= 50 * 1024) {
+        msg = isFaceSlot
+          ? "✓ Image received. Face will be verified on submit."
+          : "✓ Image received.";
+      }
       setQualityMsg(prev => ({ ...prev, [slotId]: msg || qualityMsg[slotId] }));
     };
     img.src = url;

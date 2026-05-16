@@ -28,7 +28,7 @@ def test_create_submission(client, sample_jpeg):
         "face_condition": "normal",
     }
     r = client.post("/api/submissions", files=files, data=data, headers={"Authorization": f"Bearer {token}"})
-    assert r.status_code == 200
+    assert r.status_code == 200, r.text
     body = r.json()
     assert "submission_id" in body
     assert "images" in body
@@ -56,3 +56,54 @@ def test_get_submission(client, sample_jpeg):
 def test_get_submission_404(client, auth_headers):
     r = client.get("/api/submissions/00000000-0000-0000-0000-000000000000", headers=auth_headers)
     assert r.status_code == 404
+
+
+def test_face_frontal_without_face_is_rejected(client, sample_jpeg, monkeypatch):
+    """A face-slot upload that produces no face embedding must be rejected
+    with 422 when face_condition is 'normal' — the system must not silently
+    accept blank/faceless photos as valid registrations."""
+    import app.routers.submissions as submissions_module
+
+    monkeypatch.setattr(submissions_module, "extract_embeddings_from_bytes", lambda *a, **kw: [])
+
+    token = _seed_investigator(client)
+    files = [("files", ("blank.jpg", sample_jpeg, "image/jpeg"))]
+    data = {
+        "image_types": '["face_frontal"]',
+        "attributes_ai": "{}",
+        "attributes_manual": "{}",
+        "face_condition": "normal",
+    }
+    r = client.post(
+        "/api/submissions", files=files, data=data,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert r.status_code == 422, r.text
+    detail = (r.json().get("detail") or "").lower()
+    assert "no face" in detail
+    assert "face frontal" in detail
+
+
+def test_face_frontal_without_face_allowed_when_damaged(client, sample_jpeg, monkeypatch):
+    """When face_condition is set to 'damaged' (or any non-normal value),
+    a face-slot upload with no detectable face must still be accepted, so
+    operators are not blocked from registering decomposed/burnt cases."""
+    import app.routers.submissions as submissions_module
+
+    monkeypatch.setattr(submissions_module, "extract_embeddings_from_bytes", lambda *a, **kw: [])
+
+    token = _seed_investigator(client)
+    files = [("files", ("damaged.jpg", sample_jpeg, "image/jpeg"))]
+    data = {
+        "image_types": '["face_frontal"]',
+        "attributes_ai": "{}",
+        "attributes_manual": "{}",
+        "face_condition": "damaged",
+    }
+    r = client.post(
+        "/api/submissions", files=files, data=data,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert "submission_id" in body
