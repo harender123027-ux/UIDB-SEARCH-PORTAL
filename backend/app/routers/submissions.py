@@ -3,6 +3,9 @@ import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+import os
+import base64
+from groq import Groq
 
 from app.auth import require_case_creator, require_police_portal_user
 from app.database import audit_log_insert, get_db
@@ -201,3 +204,70 @@ def get_submission(
         "status": row["status"],
         "images": processed_images,
     }
+
+
+@router.post("/ai-analyze-image")
+async def analyze_image_with_ai(
+    file: UploadFile = File(...),
+    _: Annotated[dict, Depends(require_police_portal_user)] = None,
+):
+    """Uses Groq Vision model to automatically extract body attributes from the image."""
+    try:
+        api_key = os.environ.get("GROQ_API_KEY")
+        if not api_key:
+            raise HTTPException(500, "Groq API Key not configured on the server.")
+        
+        # Read file and encode to base64
+        content = await file.read()
+        base64_image = base64.b64encode(content).decode('utf-8')
+        
+        client = Groq(api_key=api_key)
+        
+        prompt = """
+        You are a forensic image analyst assisting police in identifying an unidentified body.
+        Analyze this photo and provide estimates for the following physical attributes.
+        Return ONLY a JSON object (no markdown, no extra text) with EXACTLY these keys:
+        - "gender": "Male", "Female", or "Unknown"
+        - "age_min": integer (minimum estimated age)
+        - "age_max": integer (maximum estimated age)
+        - "build": "Thin", "Medium", "Heavy", or "Unknown"
+        - "skin": "Fair", "Medium", "Dark", or "Unknown"
+        - "hair_color": "Black", "Brown", "Grey", "White", "Bald", "Other", or "Unknown"
+        - "beard": "Yes" or "No"
+        - "clothing": A short description of visible clothes and colors (e.g. "Red shirt, blue jeans"). If none visible, return empty string.
+        """
+        
+        completion = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}",
+                            },
+                        },
+                    ],
+                }
+            ],
+            temperature=0,
+            max_tokens=200,
+        )
+        
+        result_text = completion.choices[0].message.content.strip()
+        # Clean up in case model returns markdown block
+        if result_text.startswith("```json"):
+            result_text = result_text[7:]
+        if result_text.endswith("```"):
+            result_text = result_text[:-3]
+            
+        parsed_result = json.loads(result_text.strip())
+        return parsed_result
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(500, f"AI Analysis failed: {str(e)}")

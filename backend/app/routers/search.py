@@ -137,6 +137,125 @@ def _execute_text_search(body: dict) -> dict:
     return {"query": query, "filters": filters, "shortlist": results[:30]}
 
 
+def _execute_details_search(filters: dict, search_target: str) -> dict:
+    rows = []
+    with get_db() as conn:
+        if search_target in ("all", "criminal"):
+            refs = conn.execute(
+                "SELECT id, label, photo_path, attributes FROM reference_persons ORDER BY created_at DESC"
+            ).fetchall()
+            for r in refs:
+                rows.append({
+                    "id": r["id"],
+                    "label": r["label"],
+                    "photo_path": get_url_path(r["photo_path"], is_reference=True),
+                    "attributes": r["attributes"],
+                    "result_type": "reference",
+                })
+        if search_target in ("all", "ui_body"):
+            subs = conn.execute(
+                "SELECT id, attributes_manual, attributes_ai FROM submissions ORDER BY created_at DESC"
+            ).fetchall()
+            for s in subs:
+                att_manual_raw = s["attributes_manual"]
+                att_manual = (
+                    json.loads(att_manual_raw or "{}")
+                    if isinstance(att_manual_raw, str)
+                    else (att_manual_raw or {})
+                )
+                if isinstance(att_manual, str):
+                    att_manual = json.loads(att_manual) if att_manual else {}
+                if att_manual.get("_search_probe"):
+                    continue
+                img_row = conn.execute(
+                    """SELECT path FROM images WHERE submission_id = ? ORDER BY CASE image_type
+                    WHEN 'face_frontal' THEN 0 WHEN 'face_left' THEN 1 WHEN 'face_right' THEN 2
+                    WHEN 'full_body' THEN 3 WHEN 'tattoo' THEN 4 WHEN 'clothing' THEN 5
+                    WHEN 'belonging' THEN 6 ELSE 7 END, created_at ASC LIMIT 1""",
+                    (s["id"],),
+                ).fetchone()
+                photo_path = get_url_path(img_row["path"], is_reference=False) if img_row else None
+                dd_no = att_manual.get("dd_no")
+                label = f"UI Body — DD {dd_no}" if dd_no else "UI Body (Submission)"
+                rows.append({
+                    "id": s["id"],
+                    "label": label,
+                    "photo_path": photo_path,
+                    "attributes_manual": s["attributes_manual"],
+                    "attributes_ai": s["attributes_ai"],
+                    "result_type": "submission",
+                })
+    results = []
+    for r in rows:
+        if r.get("result_type") == "submission":
+            att = merge_submission_attributes(r.get("attributes_manual"), r.get("attributes_ai"))
+        else:
+            att = json.loads(r["attributes"] or "{}") if isinstance(r["attributes"], str) else (r["attributes"] or {})
+            if isinstance(att, str):
+                att = json.loads(att) if att else {}
+        
+        score = 0.0
+        total_filters = len([v for v in filters.values() if v.strip()])
+        if not total_filters:
+            continue
+            
+        att_str = json.dumps(att).lower()
+        
+        if filters.get("age"):
+            search_age = filters["age"].lower()
+            if search_age in str(att.get("age_min", "")) or search_age in str(att.get("age_max", "")) or search_age in str(att.get("age_group", "")):
+                score += 1.0
+            elif search_age in att_str:
+                score += 0.5
+                
+        if filters.get("height"):
+            if filters["height"] in str(att.get("height", "")) or filters["height"] in str(att.get("height_cm", "")):
+                score += 1.0
+            elif filters["height"] in att_str:
+                score += 0.5
+                
+        if filters.get("marks"):
+            m = filters["marks"].lower()
+            if m in str(att.get("marks", "")).lower() or m in str(att.get("visible_marks", "")).lower():
+                score += 1.0
+            elif m in att_str:
+                score += 0.8
+                
+        if filters.get("police_station"):
+            ps = filters["police_station"].lower()
+            if ps in str(att.get("ps", "")).lower() or ps in str(att.get("ps_name", "")).lower():
+                score += 1.0
+            elif ps in att_str:
+                score += 0.5
+                
+        if filters.get("found_loc"):
+            loc = filters["found_loc"].lower()
+            if loc in str(att.get("found_loc", "")).lower() or loc in str(att.get("found_district", "")).lower():
+                score += 1.0
+            elif loc in att_str:
+                score += 0.5
+                
+        if filters.get("found_date"):
+            if filters["found_date"] in str(att.get("found_date", "")):
+                score += 1.0
+            elif filters["found_date"] in att_str:
+                score += 0.5
+                
+        if score > 0:
+            final_score = min(1.0, score / max(1, total_filters))
+            results.append({
+                "id": r["id"],
+                "label": r["label"],
+                "photo_path": r["photo_path"],
+                "attributes": att,
+                "match_score": final_score,
+                "result_type": r.get("result_type", "reference"),
+            })
+            
+    results.sort(key=lambda x: -x["match_score"])
+    return {"shortlist": results[:50]}
+
+
 @router.post("/search")
 def search_by_query(body: dict):
     """Public: no login required (text/attribute shortlist)."""
@@ -206,6 +325,13 @@ async def search_combined(
     audio: UploadFile | None = File(default=None),
     files: list[UploadFile] | None = File(default=None),
     search_target: str = Form(default="all"),  # 'all', 'criminal', 'ui_body'
+    search_type: str = Form(default=""),
+    age: str = Form(default=""),
+    height: str = Form(default=""),
+    marks: str = Form(default=""),
+    police_station: str = Form(default=""),
+    found_loc: str = Form(default=""),
+    found_date: str = Form(default=""),
 ):
     """
     Run image (submission or upload), text, and/or voice search together.
@@ -217,7 +343,16 @@ async def search_combined(
     image_refs = {}
     text_refs = {}
     voice_refs = {}
+    details_refs = {}
     transcript = ""
+
+    if age or height or marks or police_station or found_loc or found_date:
+        filters = {
+            "age": age, "height": height, "marks": marks, 
+            "police_station": police_station, "found_loc": found_loc, "found_date": found_date
+        }
+        out_details = _execute_details_search(filters, search_target)
+        details_refs = _refs_from_shortlist(out_details.get("shortlist") or [])
 
     audit_uid = current_user["id"] if current_user else None
     if submission_id and submission_id.strip():
@@ -263,19 +398,20 @@ async def search_combined(
                 out = _execute_text_search({"query": transcript, "search_target": search_target})
                 voice_refs = _refs_from_shortlist(out.get("shortlist") or [])
 
-    all_ids = set(image_refs) | set(text_refs) | set(voice_refs)
+    all_ids = set(image_refs) | set(text_refs) | set(voice_refs) | set(details_refs)
     merged = []
     for ref_id in all_ids:
-        info = image_refs.get(ref_id) or text_refs.get(ref_id) or voice_refs.get(ref_id)
+        info = image_refs.get(ref_id) or text_refs.get(ref_id) or voice_refs.get(ref_id) or details_refs.get(ref_id)
         label = (info or {}).get("label") or ref_id
         photo_path = (info or {}).get("photo_path")
         si_raw = (image_refs.get(ref_id) or {}).get("score") or 0
         qi = (image_refs.get(ref_id) or {}).get("quality") or 0
         st = (text_refs.get(ref_id) or {}).get("score") or 0
         sv = (voice_refs.get(ref_id) or {}).get("score") or 0
+        sd = (details_refs.get(ref_id) or {}).get("score") or 0
         # Keep a strong signal for "image modality agreed" without hiding borderline face-only hits.
         si_for_overlap = si_raw if si_raw >= FACE_MATCH_THRESHOLD_MEDIUM else 0
-        combined_score = max(si_raw, st, sv) if (si_raw or st or sv) else 0
+        combined_score = max(si_raw, st, sv, sd) if (si_raw or st or sv or sd) else 0
         if combined_score == 0:
             continue
 
@@ -286,6 +422,8 @@ async def search_combined(
             sources.append("text")
         if sv > 0:
             sources.append("voice")
+        if sd > 0:
+            sources.append("details")
 
         overlap = len(sources)
 

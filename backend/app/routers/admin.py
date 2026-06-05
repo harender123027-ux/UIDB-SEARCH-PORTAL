@@ -1,8 +1,10 @@
+import io
 import json
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+import pandas as pd
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from pydantic import BaseModel, field_validator
 
 from app.auth import hash_password, require_admin
@@ -723,3 +725,40 @@ def admin_delete_submission(
         delete_file(path, is_reference=False)
 
     return {"deleted": True, "id": submission_id}
+
+
+@router.post("/admin/import-excel")
+async def import_excel(
+    file: UploadFile = File(...),
+    current_user: Annotated[dict, Depends(require_admin)] = None,
+):
+    if not file.filename.endswith(('.xlsx', '.xls', '.csv')):
+        raise HTTPException(status_code=400, detail="Only Excel or CSV files are allowed.")
+    
+    contents = await file.read()
+    try:
+        if file.filename.endswith('.csv'):
+            df = pd.read_csv(io.BytesIO(contents))
+        else:
+            df = pd.read_excel(io.BytesIO(contents))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read file: {e}")
+        
+    df = df.fillna('')
+    inserted = 0
+    with get_db() as conn:
+        for _, row in df.iterrows():
+            row_dict = row.to_dict()
+            label = row_dict.get('dd_no') or row_dict.get('Name') or row_dict.get('name') or row_dict.get('FIR') or "Unknown"
+            photo = row_dict.get('image_face_frontal_path') or row_dict.get('photo_path') or ""
+            
+            ref_id = str(uuid.uuid4())
+            conn.execute(
+                "INSERT INTO reference_persons (id, label, photo_path, attributes) VALUES (?, ?, ?, ?)",
+                (ref_id, str(label), str(photo), json.dumps(row_dict))
+            )
+            inserted += 1
+            
+        audit_log_insert(conn, "admin.import_excel", "reference_persons", f"{inserted} records", user_id=current_user["id"])
+        
+    return {"message": f"Successfully imported {inserted} records", "count": inserted}

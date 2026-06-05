@@ -115,7 +115,7 @@ const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Source+Sans
   .main-content { padding: 16px 12px !important; }
   .top-bar { padding: 0 12px !important; gap: 8px !important; }
   .top-bar-logo { display: none !important; }
-  .top-bar-tabs button { padding: 12px 10px !important; fontSize: 12px !important; }
+  .top-bar-tabs button { padding: 12px 10px !important; fontSize: 14px !important; }
   .grid-2 { grid-template-columns: 1fr !important; }
   .modal-container { padding: 0 !important; }
   .modal-content { max-width: 100% !important; height: 100% !important; max-height: 100% !important; border-radius: 0 !important; }
@@ -364,7 +364,7 @@ const Badge = ({ label, color }) => {
   const s = statusColors[label] || statusColors.captured;
   return (
     <span style={{
-      fontSize: 10, fontFamily: C.mono, fontWeight: 700, letterSpacing: 1,
+      fontSize: 12, fontFamily: C.mono, fontWeight: 700, letterSpacing: 1,
       padding: "2px 8px", borderRadius: 3, textTransform: "uppercase",
       background: color ? "transparent" : s.bg,
       border: `1px solid ${color || s.border}`,
@@ -378,12 +378,12 @@ const ScoreBar = ({ value, color = C.emerald }) => (
     <div style={{ flex: 1, height: 4, background: C.borderLight, borderRadius: 2, overflow: "hidden" }}>
       <div style={{ width: `${value * 100}%`, height: "100%", background: color, borderRadius: 2, transition: "width 0.6s ease" }} />
     </div>
-    <span style={{ fontSize: 11, color, fontFamily: C.mono, fontWeight: 700, minWidth: 36 }}>{(value * 100).toFixed(0)}%</span>
+    <span style={{ fontSize: 13, color, fontFamily: C.mono, fontWeight: 700, minWidth: 36 }}>{(value * 100).toFixed(0)}%</span>
   </div>
 );
 
 const SectionLabel = ({ label }) => (
-  <div style={{ fontSize: 10, fontFamily: C.mono, letterSpacing: 3, color: C.textDim, fontWeight: 700, marginBottom: 16, textTransform: "uppercase" }}>
+  <div style={{ fontSize: 12, fontFamily: C.mono, letterSpacing: 3, color: C.textDim, fontWeight: 700, marginBottom: 16, textTransform: "uppercase" }}>
     {label}
   </div>
 );
@@ -423,22 +423,22 @@ function Login({ onSuccess }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <div data-testid="login-form" style={{ width: "100%", maxWidth: 360, background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 32, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>
-        <div style={{ fontFamily: C.display, fontSize: 22, fontWeight: 700, color: C.primary, marginBottom: 8 }}>Pehchan by Haryana Police</div>
-        <div style={{ fontSize: 12, color: C.textDim, marginBottom: 24 }}>Sign in to continue</div>
+        <div style={{ fontFamily: C.display, fontSize: 24, fontWeight: 700, color: C.primary, marginBottom: 8 }}>Pehchan by Haryana Police</div>
+        <div style={{ fontSize: 14, color: C.textDim, marginBottom: 24 }}>Sign in to continue</div>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: "block", fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Username</label>
+            <label style={{ display: "block", fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Username</label>
             <input data-testid="login-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username"
-              style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 12px", color: C.text, fontFamily: C.mono, fontSize: 13 }} />
+              style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 12px", color: C.text, fontFamily: C.mono, fontSize: 15 }} />
           </div>
           <div style={{ marginBottom: 20 }}>
-            <label style={{ display: "block", fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Password</label>
+            <label style={{ display: "block", fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Password</label>
             <input data-testid="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password"
-              style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 12px", color: C.text, fontFamily: C.mono, fontSize: 13 }} />
+              style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 12px", color: C.text, fontFamily: C.mono, fontSize: 15 }} />
           </div>
-          {error && <div data-testid="login-error" style={{ marginBottom: 12, padding: "8px 12px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 12, color: C.rose }}>{error}</div>}
+          {error && <div data-testid="login-error" style={{ marginBottom: 12, padding: "8px 12px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 14, color: C.rose }}>{error}</div>}
           <button data-testid="login-submit" type="submit" disabled={loading}
-            style={{ width: "100%", padding: "12px 16px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 13, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer" }}>
+            style={{ width: "100%", padding: "12px 16px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer" }}>
             {loading ? "Signing in…" : "Sign in"}
           </button>
         </form>
@@ -463,11 +463,11 @@ function ImageCaptureControl({ onFile, disabled }) {
       <input ref={fileInputRef} type="file" accept="image/*" capture="environment" style={{ display: "none" }} onChange={handleFile} />
       <input ref={uploadInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
       <button type="button" onClick={handleCapture} disabled={disabled}
-        style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, borderRadius: 8, fontSize: 13, fontFamily: C.mono, fontWeight: 700, color: C.cyan, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
+        style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, borderRadius: 8, fontSize: 15, fontFamily: C.mono, fontWeight: 700, color: C.cyan, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
         Capture
       </button>
       <button type="button" onClick={handleUpload} disabled={disabled}
-        style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.borderLight, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, fontFamily: C.mono, fontWeight: 600, color: C.textMid, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
+        style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.borderLight, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 15, fontFamily: C.mono, fontWeight: 600, color: C.textMid, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
         Upload
       </button>
     </div>
@@ -528,11 +528,11 @@ function VoiceCaptureControl({ onFile, disabled }) {
       {!recording ? (
         <>
           <button type="button" onClick={startRecording} disabled={disabled}
-            style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, borderRadius: 8, fontSize: 13, fontFamily: C.mono, fontWeight: 700, color: C.cyan, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
+            style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, borderRadius: 8, fontSize: 15, fontFamily: C.mono, fontWeight: 700, color: C.cyan, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
             Record
           </button>
           <button type="button" onClick={handleUpload} disabled={disabled}
-            style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.borderLight, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 13, fontFamily: C.mono, fontWeight: 600, color: C.textMid, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
+            style={{ minHeight: 44, minWidth: 44, padding: "10px 16px", background: C.borderLight, border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 15, fontFamily: C.mono, fontWeight: 600, color: C.textMid, cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 8, opacity: disabled ? 0.6 : 1, WebkitTapHighlightColor: "transparent" }}>
             Upload
           </button>
         </>
@@ -540,10 +540,10 @@ function VoiceCaptureControl({ onFile, disabled }) {
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 16px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 8 }}>
             <span style={{ width: 10, height: 10, borderRadius: "50%", background: C.rose, animation: "pulse 1s infinite" }} />
-            <span style={{ fontSize: 13, fontFamily: C.mono, fontWeight: 700, color: C.rose }}>Recording {fmt(duration)}</span>
+            <span style={{ fontSize: 15, fontFamily: C.mono, fontWeight: 700, color: C.rose }}>Recording {fmt(duration)}</span>
           </div>
           <button type="button" onClick={stopRecording}
-            style={{ minHeight: 44, padding: "10px 20px", background: C.rose, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontFamily: C.mono, fontWeight: 700, cursor: "pointer" }}>
+            style={{ minHeight: 44, padding: "10px 20px", background: C.rose, color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontFamily: C.mono, fontWeight: 700, cursor: "pointer" }}>
             Stop
           </button>
         </div>
@@ -565,25 +565,25 @@ function Dashboard() {
   const recent = data.recent || [];
   return (
     <div data-testid="dashboard-page">
-      <div data-testid="dashboard-get-started" style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 24, fontSize: 14, color: C.primary }}>
+      <div data-testid="dashboard-get-started" style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 24, fontSize: 16, color: C.primary }}>
         <strong>Get started:</strong> Register a <strong>UI Body</strong> with photos, or go to <strong>Search</strong> to match by image, text, or voice.
       </div>
       <SectionLabel label="Summary" />
       <div className="grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 12, marginBottom: 24 }}>
         {stats.map(s => (
           <div key={s.label} data-testid={`dashboard-stat-${s.label.replace(/\s+/g, '').toLowerCase()}`} style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${s.color}`, borderRadius: 6, padding: "18px 20px", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-            <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>{s.label}</div>
-            <div style={{ fontSize: 28, fontFamily: C.display, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
+            <div style={{ fontSize: 14, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>{s.label}</div>
+            <div style={{ fontSize: 30, fontFamily: C.display, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
           </div>
         ))}
       </div>
       <SectionLabel label="Recent cases" />
       <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, overflow: "hidden", background: C.card, boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-        <table data-testid="dashboard-recent-cases" style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontFamily: C.mono }}>
+        <table data-testid="dashboard-recent-cases" style={{ width: "100%", borderCollapse: "collapse", fontSize: 15, fontFamily: C.mono }}>
           <thead>
             <tr style={{ background: C.bg, borderBottom: `1px solid ${C.border}` }}>
               {["Case ID", "Status", "Created", "Matches"].map(h => (
-                <th key={h} style={{ padding: "12px 16px", textAlign: "left", color: C.textDim, fontWeight: 600, fontSize: 11, letterSpacing: 0.5 }}>{h}</th>
+                <th key={h} style={{ padding: "12px 16px", textAlign: "left", color: C.textDim, fontWeight: 600, fontSize: 13, letterSpacing: 0.5 }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -620,8 +620,13 @@ const IMAGE_SLOTS = [
 
 // ─── SECTION: UI BODY ────────────────────────────────────────────────────────
 function NewCase() {
+  const getInitialForm = () => {
+    const today = new Date().toISOString().split('T')[0];
+    return { dd_no: "", district: "", ps: "", found_date: today, found_loc: "", notes: "", gender: "", age_min: "", age_max: "", height: "", build: "", skin: "", hair_color: "", beard: "", marks: "", clothing: "", manual_notes: "" };
+  };
+
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({ dd_no: "", district: "", ps: "", found_date: "", found_loc: "", notes: "", gender: "", age_min: "", age_max: "", height: "", build: "", skin: "", hair_color: "", beard: "", marks: "", clothing: "", manual_notes: "" });
+  const [form, setForm] = useState(getInitialForm);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionId, setSubmissionId] = useState(null);
@@ -640,17 +645,64 @@ function NewCase() {
   const [geoErr, setGeoErr] = useState("");
   const [districtId, setDistrictId] = useState("");
   const [stationId, setStationId] = useState("");
+  
+  const [hasAiAnalyzed, setHasAiAnalyzed] = useState(false);
+  const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
+  
+  useEffect(() => {
+    if (step === 2 && !hasAiAnalyzed && !isAiAnalyzing) {
+      const file = slotFiles.face_frontal || slotFiles.full_body || slotFiles.face_left || slotFiles.face_right;
+      if (file) {
+        handleAiAnalyze(file);
+      }
+    }
+  }, [step, hasAiAnalyzed, isAiAnalyzing, slotFiles]);
+
+  const handleAiAnalyze = async (file) => {
+    setIsAiAnalyzing(true);
+    setHasAiAnalyzed(true); // Prevent re-triggering
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const res = await fetch(`${API_BASE}/api/ai-analyze-image`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${getToken()}` },
+        body: formData,
+      });
+      
+      if (!res.ok) return;
+      
+      const parsed = await res.json();
+      
+      setForm(f => ({
+        ...f,
+        gender: parsed.gender && parsed.gender !== "Unknown" ? parsed.gender : f.gender,
+        age_min: parsed.age_min || f.age_min,
+        age_max: parsed.age_max || f.age_max,
+        build: parsed.build && parsed.build !== "Unknown" ? parsed.build : f.build,
+        skin: parsed.skin && parsed.skin !== "Unknown" ? parsed.skin : f.skin,
+        hair_color: parsed.hair_color && parsed.hair_color !== "Unknown" ? parsed.hair_color : f.hair_color,
+        clothing: parsed.clothing || f.clothing,
+        beard: parsed.beard || f.beard,
+      }));
+    } catch (err) {
+      console.error("AI Analysis failed:", err);
+    } finally {
+      setIsAiAnalyzing(false);
+    }
+  };
   const inp = (label, key, type = "text", opts = null) => (
     <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-      <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>{label}</label>
+      <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>{label}</label>
       {opts ? (
-        <select value={form[key]} onChange={e => F(key, e.target.value)} style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }}>
+        <select value={form[key]} onChange={e => F(key, e.target.value)} style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14 }}>
           <option value="">— select —</option>
           {opts.map(o => <option key={o} value={o}>{o}</option>)}
         </select>
       ) : (
         <input type={type} value={form[key]} onChange={e => F(key, e.target.value)}
-          style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }} />
+          style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14 }} />
       )}
     </div>
   );
@@ -788,24 +840,24 @@ function NewCase() {
 
   if (submitted) return (
     <div style={{ textAlign: "center", padding: "60px 20px" }}>
-      <div style={{ fontSize: 48, marginBottom: 16, color: C.emerald }}>✓</div>
-      <div style={{ fontFamily: C.display, fontSize: 28, fontWeight: 800, color: C.emerald, marginBottom: 8 }}>Case Submitted</div>
-      <div style={{ fontFamily: C.mono, fontSize: 13, color: C.textMid, marginBottom: 8 }}>Submission ID: <span style={{ color: C.cyan }}>{submissionId}</span></div>
+      <div style={{ fontSize: 50, marginBottom: 16, color: C.emerald }}>✓</div>
+      <div style={{ fontFamily: C.display, fontSize: 30, fontWeight: 800, color: C.emerald, marginBottom: 8 }}>Case Submitted</div>
+      <div style={{ fontFamily: C.mono, fontSize: 15, color: C.textMid, marginBottom: 8 }}>Submission ID: <span style={{ color: C.cyan }}>{submissionId}</span></div>
       {submissionResults && submissionResults.length > 0 && (
         <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 24, marginTop: 16 }}>
           {submissionResults.map((img, i) => (
             <div key={img.id} style={{ padding: "8px 12px", background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8 }}>
-              <div style={{ fontSize: 10, fontFamily: C.mono, color: C.textDim, marginBottom: 4 }}>IMAGE {i + 1} QUALITY</div>
-              <div style={{ fontSize: 18, fontFamily: C.display, fontWeight: 800, color: img.quality > 0.4 ? C.emerald : img.quality > 0.2 ? C.amber : C.rose }}>
+              <div style={{ fontSize: 12, fontFamily: C.mono, color: C.textDim, marginBottom: 4 }}>IMAGE {i + 1} QUALITY</div>
+              <div style={{ fontSize: 20, fontFamily: C.display, fontWeight: 800, color: img.quality > 0.4 ? C.emerald : img.quality > 0.2 ? C.amber : C.rose }}>
                 {(img.quality * 100).toFixed(0)}%
               </div>
             </div>
           ))}
         </div>
       )}
-            <div style={{ fontFamily: C.mono, fontSize: 11, color: C.textDim, marginBottom: 24 }}>Go to Matching to run face match against the repository.</div>
-      <button onClick={() => { setSubmitted(false); setStep(1); setSubmissionId(null); setSlotFiles(Object.fromEntries(IMAGE_SLOTS.map(s => [s.id, null]))); setOrnamentNotes(Object.fromEntries(IMAGE_SLOTS.filter(s => s.uploadType === "belonging").map(s => [s.id, ""]))); setSlotPreview({}); setFaceCondition("normal"); }}
-        style={{ background: C.amberDim, border: `1px solid ${C.amberBorder}`, color: C.amber, fontFamily: C.mono, fontSize: 12, fontWeight: 700, padding: "10px 24px", borderRadius: 6, cursor: "pointer" }}>
+            <div style={{ fontFamily: C.mono, fontSize: 13, color: C.textDim, marginBottom: 24 }}>Go to Matching to run face match against the repository.</div>
+      <button onClick={() => { setSubmitted(false); setStep(1); setSubmissionId(null); setSlotFiles(Object.fromEntries(IMAGE_SLOTS.map(s => [s.id, null]))); setOrnamentNotes(Object.fromEntries(IMAGE_SLOTS.filter(s => s.uploadType === "belonging").map(s => [s.id, ""]))); setSlotPreview({}); setFaceCondition("normal"); setForm(getInitialForm()); setHasAiAnalyzed(false); }}
+        style={{ background: C.amberDim, border: `1px solid ${C.amberBorder}`, color: C.amber, fontFamily: C.mono, fontSize: 14, fontWeight: 700, padding: "10px 24px", borderRadius: 6, cursor: "pointer" }}>
         + UI Body
       </button>
     </div>
@@ -818,10 +870,10 @@ function NewCase() {
         {["1. Photos (multi-angle)", "2. Physical Attributes", "3. Review & Submit"].map((s, i) => (
           <div key={s} style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 6, background: step === i + 1 ? C.primaryDim : "transparent", border: `1px solid ${step === i + 1 ? C.primaryBorder : C.border}` }}>
-              <div style={{ width: 20, height: 20, borderRadius: "50%", background: step > i + 1 ? C.emerald : step === i + 1 ? C.primary : C.borderLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: step === i + 1 ? "#fff" : C.text, fontWeight: 700 }}>
+              <div style={{ width: 20, height: 20, borderRadius: "50%", background: step > i + 1 ? C.emerald : step === i + 1 ? C.primary : C.borderLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: step === i + 1 ? "#fff" : C.text, fontWeight: 700 }}>
                 {step > i + 1 ? "✓" : i + 1}
               </div>
-              <span style={{ fontSize: 11, fontFamily: C.mono, color: step === i + 1 ? C.primary : C.textDim }}>{s}</span>
+              <span style={{ fontSize: 13, fontFamily: C.mono, color: step === i + 1 ? C.primary : C.textDim }}>{s}</span>
             </div>
             {i < 2 && <span style={{ color: C.borderLight }}>›</span>}
           </div>
@@ -835,13 +887,13 @@ function NewCase() {
               {IMAGE_SLOTS.map(slot => (
                 <div key={slot.id} style={{ border: `1px solid ${C.border}`, borderRadius: 8, padding: 12, display: "flex", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
                   <div style={{ minWidth: 100, flex: 1 }}>
-                    <div style={{ fontSize: 11, fontFamily: C.mono, color: C.text }}>{slot.label}{slot.required ? " *" : ""}</div>
+                    <div style={{ fontSize: 13, fontFamily: C.mono, color: C.text }}>{slot.label}{slot.required ? " *" : ""}</div>
                     {!slotFiles[slot.id] ? (
                       <ImageCaptureControl onFile={(f) => addSlotFile(slot.id, f)} />
                     ) : (
                       <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: 11, color: C.emerald }}>Added</span>
-                        <button type="button" onClick={() => removeSlotFile(slot.id)} style={{ fontSize: 10, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Remove</button>
+                        <span style={{ fontSize: 13, color: C.emerald }}>Added</span>
+                        <button type="button" onClick={() => removeSlotFile(slot.id)} style={{ fontSize: 12, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Remove</button>
                       </div>
                     )}
                   </div>
@@ -850,16 +902,16 @@ function NewCase() {
                       <img src={slotPreview[slot.id]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </div>
                   )}
-                  {qualityMsg[slot.id] && <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>{qualityMsg[slot.id]}</div>}
+                  {qualityMsg[slot.id] && <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>{qualityMsg[slot.id]}</div>}
                   {slot.uploadType === "belonging" && (
                     <div style={{ width: "100%", marginTop: 10 }}>
-                      <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 0.5 }}>Describe this item for text search (e.g. brown batwa / wallet / keys — any language)</label>
+                      <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 0.5 }}>Describe this item for text search (e.g. brown batwa / wallet / keys — any language)</label>
                       <textarea
                         value={ornamentNotes[slot.id] || ""}
                         onChange={e => setOrnamentNotes(prev => ({ ...prev, [slot.id]: e.target.value }))}
                         rows={2}
                         placeholder="Shown with the photo; stored for search with regional words mapped to English."
-                        style={{ width: "100%", marginTop: 6, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, resize: "vertical" }}
+                        style={{ width: "100%", marginTop: 6, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14, resize: "vertical" }}
                       />
                     </div>
                   )}
@@ -867,20 +919,27 @@ function NewCase() {
               ))}
             </div>
             <div style={{ marginBottom: 12 }}>
-              <span style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginRight: 8 }}>Face condition:</span>
+              <span style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginRight: 8 }}>Face condition:</span>
               {["normal", "partial", "bloated", "damaged"].map(v => (
-                <button key={v} type="button" onClick={() => setFaceCondition(v)} style={{ marginRight: 6, padding: "4px 10px", borderRadius: 4, border: `1px solid ${faceCondition === v ? C.primaryBorder : C.border}`, background: faceCondition === v ? C.primaryDim : "transparent", color: faceCondition === v ? C.primary : C.textDim, fontSize: 10, fontFamily: C.mono, cursor: "pointer" }}>{v}</button>
+                <button key={v} type="button" onClick={() => setFaceCondition(v)} style={{ marginRight: 6, padding: "4px 10px", borderRadius: 4, border: `1px solid ${faceCondition === v ? C.primaryBorder : C.border}`, background: faceCondition === v ? C.primaryDim : "transparent", color: faceCondition === v ? C.primary : C.textDim, fontSize: 12, fontFamily: C.mono, cursor: "pointer" }}>{v}</button>
               ))}
             </div>
-            <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 6, padding: "12px 14px", fontSize: 12, color: C.primary, fontFamily: C.mono }}>
+            <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 6, padding: "12px 14px", fontSize: 14, color: C.primary, fontFamily: C.mono }}>
               At least one face image (frontal or profile) is required. The system will run quality checks and extract face data.
             </div>
           </div>
         )}
         {step === 2 && (
           <div className="grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 16 }}>
+            {isAiAnalyzing && (
+              <div style={{ gridColumn: "1/-1", display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, color: C.primary, fontFamily: C.mono, fontSize: 13 }}>
+                <div className="spinner" style={{ width: 14, height: 14, border: `2px solid ${C.primary}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                AI is silently scanning photo to auto-fill form...
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+              </div>
+            )}
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>District</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>District</label>
               <select value={districtId} onChange={(e) => {
                 const id = e.target.value;
                 setDistrictId(id);
@@ -889,26 +948,26 @@ function NewCase() {
                 F("district", d?.name || "");
                 F("ps", "");
                 loadStations(id);
-              }} style={{ width: "100%", marginTop: 4, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }}>
+              }} style={{ width: "100%", marginTop: 4, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14 }}>
                 <option value="">— select —</option>
                 {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Police Station</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Police Station</label>
               <select value={stationId} onChange={(e) => {
                 const id = e.target.value;
                 setStationId(id);
                 const s = stations.find((x) => x.id === id);
                 F("ps", s?.name || "");
               }} disabled={!districtId}
-                style={{ width: "100%", marginTop: 4, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, opacity: districtId ? 1 : 0.6 }}>
+                style={{ width: "100%", marginTop: 4, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14, opacity: districtId ? 1 : 0.6 }}>
                 <option value="">— select —</option>
                 {stations.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             {geoErr && (
-              <div style={{ gridColumn: "1/-1", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 8, padding: "10px 14px", fontSize: 11, color: C.rose, fontFamily: C.mono }}>
+              <div style={{ gridColumn: "1/-1", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 8, padding: "10px 14px", fontSize: 13, color: C.rose, fontFamily: C.mono }}>
                 {geoErr}
               </div>
             )}
@@ -924,31 +983,29 @@ function NewCase() {
             {inp("Skin Tone", "skin", "text", ["Fair", "Medium", "Dark", "Unknown"])}
             {inp("Hair Color", "hair_color", "text", ["Black", "Grey", "Brown", "White", "Unknown"])}
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Beard</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Beard</label>
               <div style={{ display: "flex", gap: 8 }}>
                 {["Yes", "No", "N/A"].map(v => (
-                  <button key={v} onClick={() => F("beard", v)} style={{ flex: 1, padding: "8px", borderRadius: 6, border: `1px solid ${form.beard === v ? C.amberBorder : C.borderLight}`, background: form.beard === v ? C.amberDim : "transparent", color: form.beard === v ? C.amber : C.textDim, fontFamily: C.mono, fontSize: 11, cursor: "pointer" }}>{v}</button>
+                  <button key={v} onClick={() => F("beard", v)} style={{ flex: 1, padding: "8px", borderRadius: 6, border: `1px solid ${form.beard === v ? C.amberBorder : C.borderLight}`, background: form.beard === v ? C.amberDim : "transparent", color: form.beard === v ? C.amber : C.textDim, fontFamily: C.mono, fontSize: 13, cursor: "pointer" }}>{v}</button>
                 ))}
               </div>
             </div>
             <div style={{ gridColumn: "1/-1", display: "flex", flexDirection: "column", gap: 4 }}>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Marks / Scars / Tattoos with their location</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Marks / Scars / Tattoos with their location</label>
               <textarea value={form.marks} onChange={e => F("marks", e.target.value)} rows={2}
-                style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, resize: "vertical" }} />
+                style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14, resize: "vertical" }} />
             </div>
             <div style={{ gridColumn: "1/-1", display: "flex", flexDirection: "column", gap: 4 }}>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Clothing and ornaments like watch, bracelet etc</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Clothing and ornaments like watch, bracelet etc</label>
               <textarea value={form.clothing} onChange={e => F("clothing", e.target.value)} rows={2}
-                style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, resize: "vertical" }} />
+                style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14, resize: "vertical" }} />
             </div>
             <div style={{ gridColumn: "1/-1", display: "flex", flexDirection: "column", gap: 4 }}>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Additional details (officer/family – not necessarily visible in photo)</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1 }}>Additional details (officer/family – not necessarily visible in photo)</label>
               <textarea value={form.manual_notes} onChange={e => F("manual_notes", e.target.value)} rows={2} placeholder="e.g. tattoo on neck per family, wearing red shirt when found"
-                style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12, resize: "vertical" }} />
+                style={{ background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14, resize: "vertical" }} />
             </div>
-            <div style={{ gridColumn: "1/-1", background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, borderRadius: 8, padding: "12px 14px", fontSize: 11, color: C.cyan, fontFamily: C.mono }}>
-              AI-derived attributes, clothing/ornament text, and per-item photo captions are stored and searchable (regional words like batwa/butwa match &quot;wallet&quot; in search).
-            </div>
+
           </div>
         )}
         {step === 3 && (
@@ -959,27 +1016,25 @@ function NewCase() {
                 ...IMAGE_SLOTS.filter(s => s.uploadType === "belonging" && slotFiles[s.id] && (ornamentNotes[s.id] || "").trim()).map(s => [`Item note (${s.label})`, ornamentNotes[s.id]]),
               ].map(([k, v]) => (
                 <div key={k} style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, padding: "10px 14px" }}>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>{k}</div>
-                  <div style={{ fontSize: 13, color: C.text, fontFamily: C.mono }}>{v}</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>{k}</div>
+                  <div style={{ fontSize: 15, color: C.text, fontFamily: C.mono }}>{v}</div>
                 </div>
               ))}
             </div>
-            {submitError && <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, padding: 10, marginBottom: 12, fontSize: 11, color: C.rose }}>{submitError}</div>}
-            <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 8, padding: "14px", fontSize: 11, color: "#fda4af", fontFamily: C.mono, marginBottom: 20 }}>
-              AI outputs are investigative leads only. No court-admissible claims. Human verification required for all matches.
-            </div>
+            {submitError && <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, padding: 10, marginBottom: 12, fontSize: 13, color: C.rose }}>{submitError}</div>}
+
           </div>
         )}
 
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20 }}>
           <button onClick={() => setStep(s => Math.max(1, s - 1))} disabled={step === 1 || isSubmitting}
-            style={{ background: "transparent", border: `1px solid ${C.border}`, color: (step === 1 || isSubmitting) ? C.textDim : C.text, fontFamily: C.mono, fontSize: 12, padding: "9px 20px", borderRadius: 6, cursor: (step === 1 || isSubmitting) ? "not-allowed" : "pointer" }}>
+            style={{ background: "transparent", border: `1px solid ${C.border}`, color: (step === 1 || isSubmitting) ? C.textDim : C.text, fontFamily: C.mono, fontSize: 14, padding: "9px 20px", borderRadius: 6, cursor: (step === 1 || isSubmitting) ? "not-allowed" : "pointer" }}>
             ← Back
           </button>
           <button
             onClick={() => step < 3 ? setStep(s => s + 1) : doSubmit()}
             disabled={(step === 1 && !canProceedStep1()) || isSubmitting}
-            style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, color: C.primary, fontFamily: C.mono, fontSize: 12, fontWeight: 700, padding: "9px 24px", borderRadius: 6, cursor: ((step === 1 && !canProceedStep1()) || isSubmitting) ? "not-allowed" : "pointer" }}>
+            style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, color: C.primary, fontFamily: C.mono, fontSize: 14, fontWeight: 700, padding: "9px 24px", borderRadius: 6, cursor: ((step === 1 && !canProceedStep1()) || isSubmitting) ? "not-allowed" : "pointer" }}>
             {step < 3 ? "Next →" : isSubmitting ? "Submitting..." : "Submit Case ✓"}
           </button>
         </div>
@@ -1010,15 +1065,15 @@ function DetailModal({ type, id, onClose }) {
     <div className="modal-container" style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 20 }}>
       <div className="modal-content" style={{ background: C.card, width: "100%", maxWidth: 640, maxHeight: "90vh", borderRadius: 12, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 10px 25px rgba(0,0,0,0.15)" }}>
         <div style={{ padding: "16px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg }}>
-          <div style={{ fontFamily: C.display, fontWeight: 700, color: C.primary, fontSize: 16 }}>
+          <div style={{ fontFamily: C.display, fontWeight: 700, color: C.primary, fontSize: 18 }}>
             Record details
           </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer", color: C.textDim }}>×</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", fontSize: 22, cursor: "pointer", color: C.textDim }}>×</button>
         </div>
 
         <div style={{ padding: 24, overflowY: "auto", flex: 1 }}>
           {loading && <div style={{ textAlign: "center", padding: 40, color: C.textDim, fontFamily: C.mono }}>Loading...</div>}
-          {error && <div style={{ padding: 12, background: C.roseDim, color: C.rose, borderRadius: 6, fontSize: 13 }}>{error}</div>}
+          {error && <div style={{ padding: 12, background: C.roseDim, color: C.rose, borderRadius: 6, fontSize: 15 }}>{error}</div>}
 
           {data && (
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -1034,8 +1089,8 @@ function DetailModal({ type, id, onClose }) {
                       ["Condition", data.face_condition || "N/A"]
                     ].filter(([, v]) => v !== "N/A").map(([k, v]) => (
                       <div key={k} style={{ background: C.bg, padding: "8px 12px", borderRadius: 6, border: `1px solid ${C.borderLight}` }}>
-                        <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 2 }}>{k}</div>
-                        <div style={{ fontSize: 12, color: C.text, fontFamily: C.mono, fontWeight: 600 }}>{v}</div>
+                        <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 2 }}>{k}</div>
+                        <div style={{ fontSize: 14, color: C.text, fontFamily: C.mono, fontWeight: 600 }}>{v}</div>
                       </div>
                     ))}
                   </div>
@@ -1056,7 +1111,7 @@ function DetailModal({ type, id, onClose }) {
               {Array.isArray((data.attributes || {}).ornament_notes) && (data.attributes || {}).ornament_notes.length > 0 && (
                 <div>
                   <SectionLabel label="Personal items — recorded descriptions" />
-                  <ul style={{ margin: 0, paddingLeft: 20, color: C.text, fontFamily: C.mono, fontSize: 12, lineHeight: 1.5 }}>
+                  <ul style={{ margin: 0, paddingLeft: 20, color: C.text, fontFamily: C.mono, fontSize: 14, lineHeight: 1.5 }}>
                     {(data.attributes || {}).ornament_notes.map((o, i) => (
                       <li key={i}>{typeof o === "object" && o != null && o.note != null ? `${o.slot ? `${o.slot}: ` : ""}${o.note}` : String(o)}</li>
                     ))}
@@ -1072,10 +1127,10 @@ function DetailModal({ type, id, onClose }) {
                       .filter(([k, v]) => k !== "ornament_notes" && v != null && v !== "" && v !== "Unknown")
                       .map(([k, v]) => (
                         <div key={k} style={{ border: `1px solid ${C.borderLight}`, padding: "8px 10px", borderRadius: 6, background: C.card }}>
-                          <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, textTransform: k === "marks" || k === "clothing" ? "none" : "capitalize" }}>
+                          <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, textTransform: k === "marks" || k === "clothing" ? "none" : "capitalize" }}>
                             {k === "marks" ? "Marks / Scars / Tattoos with their location" : k === "clothing" ? "Clothing and ornaments like watch, bracelet etc" : k.replace(/_/g, " ")}
                           </div>
-                          <div style={{ fontSize: 12, color: C.text, fontFamily: C.mono, fontWeight: 500 }}>{String(v)}</div>
+                          <div style={{ fontSize: 14, color: C.text, fontFamily: C.mono, fontWeight: 500 }}>{String(v)}</div>
                         </div>
                       ))}
                   </div>
@@ -1097,9 +1152,9 @@ function DetailModal({ type, id, onClose }) {
                                 <div key={img.id} style={{ borderRadius: 8, overflow: "hidden", border: `1px solid ${C.amberBorder}`, background: C.bg }}>
                                   <img src={getPhotoUrl(img.path)} alt="" style={{ width: "100%", height: 100, objectFit: "cover" }} />
                                   <div style={{ padding: 4, display: "flex", justifyContent: "space-between", alignItems: "center", background: C.card }}>
-                                    <span style={{ fontSize: 9, fontFamily: C.mono, color: C.amber, fontWeight: 600 }}>Belonging</span>
+                                    <span style={{ fontSize: 11, fontFamily: C.mono, color: C.amber, fontWeight: 600 }}>Belonging</span>
                                     {img.quality_score != null && (
-                                      <span style={{ fontSize: 9, fontFamily: C.mono, fontWeight: 700, color: img.quality_score > 0.4 ? C.emerald : img.quality_score > 0.2 ? C.amber : C.rose }}>
+                                      <span style={{ fontSize: 11, fontFamily: C.mono, fontWeight: 700, color: img.quality_score > 0.4 ? C.emerald : img.quality_score > 0.2 ? C.amber : C.rose }}>
                                         {(img.quality_score * 100).toFixed(0)}%
                                       </span>
                                     )}
@@ -1117,9 +1172,9 @@ function DetailModal({ type, id, onClose }) {
                                 <div key={img.id} style={{ borderRadius: 8, overflow: "hidden", border: `1px solid ${C.borderLight}`, background: C.bg }}>
                                   <img src={getPhotoUrl(img.path)} alt="" style={{ width: "100%", height: 100, objectFit: "cover" }} />
                                   <div style={{ padding: 4, display: "flex", justifyContent: "space-between", alignItems: "center", background: C.card }}>
-                                    <span style={{ fontSize: 9, fontFamily: C.mono, color: C.textDim }}>{img.image_type.replace(/_/g, " ")}</span>
+                                    <span style={{ fontSize: 11, fontFamily: C.mono, color: C.textDim }}>{img.image_type.replace(/_/g, " ")}</span>
                                     {img.quality_score != null && (
-                                      <span style={{ fontSize: 9, fontFamily: C.mono, fontWeight: 700, color: img.quality_score > 0.4 ? C.emerald : img.quality_score > 0.2 ? C.amber : C.rose }}>
+                                      <span style={{ fontSize: 11, fontFamily: C.mono, fontWeight: 700, color: img.quality_score > 0.4 ? C.emerald : img.quality_score > 0.2 ? C.amber : C.rose }}>
                                         {(img.quality_score * 100).toFixed(0)}%
                                       </span>
                                     )}
@@ -1139,7 +1194,7 @@ function DetailModal({ type, id, onClose }) {
         </div>
 
         <div style={{ padding: "16px 24px", borderTop: `1px solid ${C.border}`, textAlign: "right", background: C.bg }}>
-          <button onClick={onClose} style={{ padding: "8px 20px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Close</button>
+          <button onClick={onClose} style={{ padding: "8px 20px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Close</button>
         </div>
       </div>
     </div>
@@ -1159,11 +1214,17 @@ function SearchTab({ user }) {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(null);
   const [error, setError] = useState(null);
 
+  const [showDetailsSearch, setShowDetailsSearch] = useState(false);
+  const [detailsForm, setDetailsForm] = useState({
+    age: "", height: "", marks: "", police_station: "", found_loc: "", found_date: ""
+  });
+
   // Phase 1 scope: search is restricted to UI Bodies. Criminal/missing-person
   // matching is out of scope for this release.
   const SEARCH_TARGET = "ui_body";
 
-  const hasInput = photo || (description || "").trim() || voice;
+  const hasDetails = Object.values(detailsForm).some(v => typeof v === 'string' && v.trim() !== "");
+  const hasInput = photo || (description || "").trim() || voice || hasDetails;
 
   const runSearch = async () => {
     if (!hasInput) return;
@@ -1174,6 +1235,11 @@ function SearchTab({ user }) {
       if (photo) formData.append("files", photo);
       if (description.trim()) formData.append("query", description.trim());
       if (voice) formData.append("audio", voice);
+      if (hasDetails) {
+        Object.entries(detailsForm).forEach(([k, v]) => {
+          if (typeof v === 'string' && v.trim()) formData.append(k, v.trim());
+        });
+      }
       formData.append("search_target", SEARCH_TARGET);
       const res = await apiFetch("/api/search/combined", { method: "POST", body: formData });
       if (!res.ok) throw new Error(res.statusText);
@@ -1201,6 +1267,8 @@ function SearchTab({ user }) {
     }
   };
 
+
+
   const submitFeedback = async (matchId) => {
     const v = feedback[`${matchId}_verdict`]; const f = feedback[`${matchId}_face_assessment`]; const a = feedback[`${matchId}_action`]; const n = feedback[`${matchId}_notes`];
     if (!v || !a) return;
@@ -1218,47 +1286,66 @@ function SearchTab({ user }) {
       <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8, padding: 20, marginBottom: 20 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div>
-            <label style={{ display: "block", fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Photo (optional)</label>
+            <label style={{ display: "block", fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Photo (optional)</label>
             {!photo ? (
               <ImageCaptureControl onFile={setPhoto} />
             ) : (
               <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <span style={{ fontSize: 12, color: C.emerald, fontFamily: C.mono }}>{photo.name}</span>
-                <button type="button" onClick={() => setPhoto(null)} style={{ fontSize: 11, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Remove</button>
+                <span style={{ fontSize: 14, color: C.emerald, fontFamily: C.mono }}>{photo.name}</span>
+                <button type="button" onClick={() => setPhoto(null)} style={{ fontSize: 13, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Remove</button>
               </div>
             )}
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Description (optional)</label>
+            <label style={{ display: "block", fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Description (optional)</label>
             <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g. male, 25–30, tattoo on neck"
-              style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 12px", color: C.text, fontFamily: C.mono, fontSize: 12 }} />
+              style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 12px", color: C.text, fontFamily: C.mono, fontSize: 14 }} />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Voice note (optional) — will be transcribed</label>
+            <label style={{ display: "block", fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Voice note (optional) — will be transcribed</label>
             {!voice ? (
               <VoiceCaptureControl onFile={setVoice} />
             ) : (
               <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <span style={{ fontSize: 12, color: C.emerald, fontFamily: C.mono }}>{voice.name}</span>
-                <button type="button" onClick={() => setVoice(null)} style={{ fontSize: 11, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Remove</button>
+                <span style={{ fontSize: 14, color: C.emerald, fontFamily: C.mono }}>{voice.name}</span>
+                <button type="button" onClick={() => setVoice(null)} style={{ fontSize: 13, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Remove</button>
               </div>
             )}
           </div>
+
+          <div>
+            <label style={{ display: "block", fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 6 }}>Details (optional) — age, height, marks</label>
+            {!showDetailsSearch ? (
+              <button type="button" onClick={() => setShowDetailsSearch(true)} style={{ minHeight: 44, padding: "10px 16px", background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, borderRadius: 8, fontSize: 15, fontFamily: C.mono, fontWeight: 700, color: C.cyan, cursor: "pointer", display: "inline-flex", alignItems: "center", WebkitTapHighlightColor: "transparent" }}>
+                Search by detail
+              </button>
+            ) : (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 8, padding: 12 }}>
+                <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                  <div><label style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono, display: "block", marginBottom: 2 }}>Age</label><input type="text" placeholder="e.g. 25" value={detailsForm.age} onChange={e => setDetailsForm(f => ({ ...f, age: e.target.value }))} style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, padding: "6px 8px", borderRadius: 4, color: C.text, fontSize: 13, fontFamily: C.mono, boxSizing: "border-box" }}/></div>
+                  <div><label style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono, display: "block", marginBottom: 2 }}>Height (cm)</label><input type="text" placeholder="e.g. 170" value={detailsForm.height} onChange={e => setDetailsForm(f => ({ ...f, height: e.target.value }))} style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, padding: "6px 8px", borderRadius: 4, color: C.text, fontSize: 13, fontFamily: C.mono, boxSizing: "border-box" }}/></div>
+                  <div><label style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono, display: "block", marginBottom: 2 }}>Marks/Scars</label><input type="text" placeholder="e.g. Tattoo" value={detailsForm.marks} onChange={e => setDetailsForm(f => ({ ...f, marks: e.target.value }))} style={{ width: "100%", background: C.bg, border: `1px solid ${C.border}`, padding: "6px 8px", borderRadius: 4, color: C.text, fontSize: 13, fontFamily: C.mono, boxSizing: "border-box" }}/></div>
+                </div>
+                <button type="button" onClick={() => { setShowDetailsSearch(false); setDetailsForm({age: "", height: "", marks: "", police_station: "", found_loc: "", found_date: ""}); }} style={{ fontSize: 13, color: C.rose, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono, padding: "8px" }}>Remove</button>
+              </div>
+            )}
+          </div>
+
           <button onClick={runSearch} disabled={!hasInput || loading}
-            style={{ padding: "12px 24px", background: hasInput ? C.emerald : C.border, color: "#fff", border: "none", fontFamily: C.mono, fontSize: 13, fontWeight: 700, borderRadius: 6, cursor: hasInput && !loading ? "pointer" : "not-allowed" }}>
+            style={{ padding: "12px 24px", background: hasInput ? C.emerald : C.border, color: "#fff", border: "none", fontFamily: C.mono, fontSize: 15, fontWeight: 700, borderRadius: 6, cursor: hasInput && !loading ? "pointer" : "not-allowed" }}>
             {loading ? "Searching…" : "Search"}
           </button>
         </div>
-        <p style={{ margin: "12px 0 0", fontSize: 11, color: C.textDim, fontFamily: C.mono }}>Add any combination of photo, text, or voice. Search runs all of them against the repository and shows matches by overlap and confidence.</p>
+        <p style={{ margin: "12px 0 0", fontSize: 13, color: C.textDim, fontFamily: C.mono }}>Add any combination of photo, text, or voice. Search runs all of them against the repository and shows matches by overlap and confidence.</p>
       </div>
 
-      {transcript && <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, padding: 10, marginBottom: 12, fontSize: 11, color: C.textMid, fontFamily: C.mono }}>Voice transcript: “{transcript}”</div>}
-      {error && <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, padding: 8, marginBottom: 12, fontSize: 11, color: C.rose }}>{error}</div>}
+      {transcript && <div style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: 6, padding: 10, marginBottom: 12, fontSize: 13, color: C.textMid, fontFamily: C.mono }}>Voice transcript: “{transcript}”</div>}
+      {error && <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, padding: 8, marginBottom: 12, fontSize: 13, color: C.rose }}>{error}</div>}
       {results.length === 0 && !loading && (
-        <div style={{ padding: 24, textAlign: "center", color: C.textDim, fontFamily: C.mono, fontSize: 12 }}>Add at least one: photo, description, or voice note, then click Search.</div>
+        <div style={{ padding: 24, textAlign: "center", color: C.textDim, fontFamily: C.mono, fontSize: 14 }}>Add at least one: photo, description, or voice note, then click Search.</div>
       )}
 
-      <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Results ({results.length})</div>
+      <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Results ({results.length})</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {results.map((r, idx) => {
           const score = r.score ?? 0;
@@ -1270,17 +1357,17 @@ function SearchTab({ user }) {
             <div key={r.match_id || r.id || idx} style={{ border: `1px solid ${selected === (r.match_id || r.id) ? C.cyanBorder : C.border}`, borderRadius: 10, overflow: "hidden", background: C.card, transition: "border-color 0.2s" }}>
               <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                 {matchCount > 0 && (
-                  <div style={{ padding: "4px 10px", borderRadius: 6, background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, fontSize: 11, fontFamily: C.mono, fontWeight: 700, color: C.cyan }}>
+                  <div style={{ padding: "4px 10px", borderRadius: 6, background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, fontSize: 13, fontFamily: C.mono, fontWeight: 700, color: C.cyan }}>
                     {matchCount} case{matchCount !== 1 ? "s" : ""}
                   </div>
                 )}
                 {overlap > 0 && matchCount === 0 && (
-                  <div style={{ padding: "4px 10px", borderRadius: 6, background: overlap >= 2 ? C.emeraldDim : C.amberDim, border: `1px solid ${overlap >= 2 ? C.emerald : C.amber}`, fontSize: 11, fontFamily: C.mono, fontWeight: 700, color: overlap >= 2 ? C.emerald : C.amber }}>
+                  <div style={{ padding: "4px 10px", borderRadius: 6, background: overlap >= 2 ? C.emeraldDim : C.amberDim, border: `1px solid ${overlap >= 2 ? C.emerald : C.amber}`, fontSize: 13, fontFamily: C.mono, fontWeight: 700, color: overlap >= 2 ? C.emerald : C.amber }}>
                     {overlap}/3 {sources.length ? `(${sources.join("+")})` : ""}
                   </div>
                 )}
                 {r.rank != null && (
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: r.confidence_level === "high" ? C.emeraldDim : r.confidence_level === "medium" ? C.amberDim : C.roseDim, border: `2px solid ${r.confidence_level === "high" ? C.emerald : r.confidence_level === "medium" ? C.amber : C.rose}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.display, fontSize: 18, fontWeight: 800, color: r.confidence_level === "high" ? C.emerald : r.confidence_level === "medium" ? C.amber : C.rose }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: r.confidence_level === "high" ? C.emeraldDim : r.confidence_level === "medium" ? C.amberDim : C.roseDim, border: `2px solid ${r.confidence_level === "high" ? C.emerald : r.confidence_level === "medium" ? C.amber : C.rose}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.display, fontSize: 20, fontWeight: 800, color: r.confidence_level === "high" ? C.emerald : r.confidence_level === "medium" ? C.amber : C.rose }}>
                     #{r.rank}
                   </div>
                 )}
@@ -1288,20 +1375,20 @@ function SearchTab({ user }) {
                   {r.photo_path ? (
                     <img src={getPhotoUrl(r.photo_path)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
-                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.textDim, fontSize: 10, fontFamily: C.mono }}>No Photo</div>
+                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.textDim, fontSize: 12, fontFamily: C.mono }}>No Photo</div>
                   )}
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(0,0,0,0.6)", color: "#fff", fontSize: 8, padding: "2px 4px", textAlign: "center", fontFamily: C.mono, textTransform: "uppercase" }}>
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(0,0,0,0.6)", color: "#fff", fontSize: 10, padding: "2px 4px", textAlign: "center", fontFamily: C.mono, textTransform: "uppercase" }}>
                     {r.result_type === "submission" ? "UI Body" : (r.result_type || "Result")}
                   </div>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, color: C.text, fontFamily: C.mono, fontWeight: 700 }}>{r.label}</div>
+                  <div style={{ fontSize: 15, color: C.text, fontFamily: C.mono, fontWeight: 700 }}>{r.label}</div>
                   {r.attributes?.dd_no && (
-                    <div style={{ fontSize: 12, color: C.cyan, fontFamily: C.mono, fontWeight: 700, marginTop: 4 }}>
+                    <div style={{ fontSize: 14, color: C.cyan, fontFamily: C.mono, fontWeight: 700, marginTop: 4 }}>
                       DD No. {r.attributes.dd_no}
                     </div>
                   )}
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginTop: 2 }}>ID: {r.id.slice(0, 8)}…</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginTop: 2 }}>ID: {r.id.slice(0, 8)}…</div>
 
                   {r.attributes && Object.keys(r.attributes).length > 0 && (
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
@@ -1309,43 +1396,43 @@ function SearchTab({ user }) {
                         .filter(([k, v]) => ["height", "height_cm", "found_district", "gender", "age_group", "age_min", "age_max", "ps_name", "found_date", "found_loc"].includes(k) && v != null && v !== "")
                         .map(([k, v]) => (
                           <div key={k} style={{ background: C.bg, padding: "3px 6px", borderRadius: 4, border: `1px solid ${C.borderLight}`, display: "flex", gap: 4, alignItems: "center" }}>
-                            <span style={{ fontSize: 8, color: C.textDim, fontFamily: C.mono, textTransform: k === "marks" || k === "clothing" ? "none" : "uppercase" }}>
+                            <span style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, textTransform: k === "marks" || k === "clothing" ? "none" : "uppercase" }}>
                               {k === "marks" ? "Marks/Scars/Tattoos with location:" : k === "clothing" ? "Clothing/Ornaments:" : k.replace(/_/g, " ") + ":"}
                             </span>
-                            <span style={{ fontSize: 10, color: C.text, fontFamily: C.mono, fontWeight: 600 }}>{String(v)}</span>
+                            <span style={{ fontSize: 12, color: C.text, fontFamily: C.mono, fontWeight: 600 }}>{String(v)}</span>
                           </div>
                         ))}
                     </div>
                   )}
 
                   {(r.matched_by || []).length > 0 && (
-                    <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginTop: 6 }}>
+                    <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginTop: 6 }}>
                       Matched by: {(r.matched_by || []).slice(0, 2).map(m => `${(m.submission_id || "").slice(0, 8)} (${((m.score || 0) * 100).toFixed(0)}%)`).join(", ")}{(r.matched_by || []).length > 2 ? "…" : ""}
                     </div>
                   )}
                 </div>
                 <div style={{ textAlign: "right", display: "flex", alignItems: "center", gap: 16 }}>
                   <div>
-                    <div style={{ fontSize: 24, fontFamily: C.display, fontWeight: 800, color: r.confidence_level === "high" ? C.emerald : r.confidence_level === "medium" ? C.amber : C.rose }}>
+                    <div style={{ fontSize: 26, fontFamily: C.display, fontWeight: 800, color: r.confidence_level === "high" ? C.emerald : r.confidence_level === "medium" ? C.amber : C.rose }}>
                       {(score * 100).toFixed(0)}%
                     </div>
-                    <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, textTransform: "uppercase", fontWeight: 700 }}>{r.confidence_level} CONFIDENCE</div>
+                    <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, textTransform: "uppercase", fontWeight: 700 }}>{r.confidence_level} CONFIDENCE</div>
                     {r.quality > 0 && (
                       <div style={{ marginTop: 4, display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4 }}>
-                        <span style={{ fontSize: 9, color: C.textDim, fontFamily: C.mono }}>QUALITY:</span>
-                        <span style={{ fontSize: 11, fontFamily: C.mono, fontWeight: 700, color: r.quality > 0.4 ? C.emerald : r.quality > 0.2 ? C.amber : C.rose }}>
+                        <span style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono }}>QUALITY:</span>
+                        <span style={{ fontSize: 13, fontFamily: C.mono, fontWeight: 700, color: r.quality > 0.4 ? C.emerald : r.quality > 0.2 ? C.amber : C.rose }}>
                           {(r.quality * 100).toFixed(0)}%
                         </span>
                       </div>
                     )}
                   </div>
                   <button onClick={() => setDetailView({ type: r.result_type || "reference", id: r.id })}
-                    style={{ background: "transparent", border: `1px solid ${C.cyan}`, color: C.cyan, borderRadius: 6, padding: "8px 14px", fontFamily: C.mono, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    style={{ background: "transparent", border: `1px solid ${C.cyan}`, color: C.cyan, borderRadius: 6, padding: "8px 14px", fontFamily: C.mono, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                     Details
                   </button>
                   {hasFeedback && (
                     <button onClick={() => setSelected(selected === (r.match_id || r.id) ? null : (r.match_id || r.id))}
-                      style={{ background: "none", border: "none", color: C.textDim, fontSize: 12, cursor: "pointer", padding: 8 }}>
+                      style={{ background: "none", border: "none", color: C.textDim, fontSize: 14, cursor: "pointer", padding: 8 }}>
                       {selected === (r.match_id || r.id) ? "▲" : "▼"}
                     </button>
                   )}
@@ -1356,39 +1443,39 @@ function SearchTab({ user }) {
                 <div style={{ borderTop: `1px solid ${C.border}`, padding: "20px", background: C.bg }}>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
                     <div>
-                      <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1, marginBottom: 12 }}>AI SCORE</div>
+                      <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1, marginBottom: 12 }}>AI SCORE</div>
                       <ScoreBar value={score} color={C.cyan} />
                     </div>
                     <div>
-                      <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1, marginBottom: 12 }}>INVESTIGATOR FEEDBACK</div>
+                      <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1, marginBottom: 12 }}>INVESTIGATOR FEEDBACK</div>
                       {feedbackSubmitted === r.match_id ? (
-                        <div style={{ padding: "20px", textAlign: "center", color: C.emerald, fontFamily: C.mono, fontSize: 13 }}>✓ Feedback saved</div>
+                        <div style={{ padding: "20px", textAlign: "center", color: C.emerald, fontFamily: C.mono, fontSize: 15 }}>✓ Feedback saved</div>
                       ) : (
                         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                           {[["verdict", "Verdict", ["correct_match", "incorrect_match", "possible_match", "needs_more_info"]], ["face_assessment", "Face", ["strong_match", "weak_match", "no_match", "not_visible"]], ["action", "Action", ["referred_forensics", "referred_family", "further_investigation", "case_closed", "none"]]].map(([key, label, opts]) => (
                             <div key={key}>
-                              <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>{label}</div>
+                              <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>{label}</div>
                               <select value={feedback[`${r.match_id}_${key}`] || ""} onChange={e => setFeedback(f => ({ ...f, [`${r.match_id}_${key}`]: e.target.value }))}
-                                style={{ width: "100%", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "7px 10px", color: C.text, fontFamily: C.mono, fontSize: 11 }}>
+                                style={{ width: "100%", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "7px 10px", color: C.text, fontFamily: C.mono, fontSize: 13 }}>
                                 <option value="">— select —</option>
                                 {opts.map(o => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
                               </select>
                             </div>
                           ))}
                           <div>
-                            <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>Notes</div>
+                            <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>Notes</div>
                             <textarea rows={2} value={feedback[`${r.match_id}_notes`] || ""} onChange={e => setFeedback(f => ({ ...f, [`${r.match_id}_notes`]: e.target.value }))}
-                              style={{ width: "100%", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "7px 10px", color: C.text, fontFamily: C.mono, fontSize: 11, resize: "vertical", boxSizing: "border-box" }} />
+                              style={{ width: "100%", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "7px 10px", color: C.text, fontFamily: C.mono, fontSize: 13, resize: "vertical", boxSizing: "border-box" }} />
                           </div>
                           <button onClick={() => submitFeedback(r.match_id)}
-                            style={{ background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, color: C.cyan, fontFamily: C.mono, fontSize: 11, fontWeight: 700, padding: "9px", borderRadius: 6, cursor: "pointer" }}>
+                            style={{ background: C.cyanDim, border: `1px solid ${C.cyanBorder}`, color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: 700, padding: "9px", borderRadius: 6, cursor: "pointer" }}>
                             Submit feedback →
                           </button>
                         </div>
                       )}
                     </div>
                   </div>
-                  <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, padding: "10px 14px", fontSize: 11, color: "#fda4af", fontFamily: C.mono }}>
+                  <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, padding: "10px 14px", fontSize: 13, color: "#fda4af", fontFamily: C.mono }}>
                     All scores are probabilistic. Human verification required.
                   </div>
                 </div>
@@ -1413,7 +1500,7 @@ function Schemas() {
       <SectionLabel label="Data Schemas" />
       <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
         {[["pg", "PostgreSQL Tables"], ["qdrant", "Qdrant Collections"], ["blob", "Blob Storage"]].map(([k, l]) => (
-          <button key={k} onClick={() => setTab(k)} style={{ padding: "8px 16px", borderRadius: 6, border: `1px solid ${tab === k ? C.amberBorder : C.border}`, background: tab === k ? C.amberDim : "transparent", color: tab === k ? C.amber : C.textDim, fontFamily: C.mono, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>{l}</button>
+          <button key={k} onClick={() => setTab(k)} style={{ padding: "8px 16px", borderRadius: 6, border: `1px solid ${tab === k ? C.amberBorder : C.border}`, background: tab === k ? C.amberDim : "transparent", color: tab === k ? C.amber : C.textDim, fontFamily: C.mono, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>{l}</button>
         ))}
       </div>
 
@@ -1423,18 +1510,18 @@ function Schemas() {
             <div key={t.name} style={{ border: `1px solid ${C.border}`, borderRadius: 10, overflow: "hidden", background: C.card }}>
               <div onClick={() => toggle(t.name)} style={{ padding: "14px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, background: C.bg }}>
                 <div style={{ width: 10, height: 10, borderRadius: 2, background: t.color }} />
-                <span style={{ fontFamily: C.mono, fontSize: 14, fontWeight: 700, color: t.color }}>{t.name}</span>
-                <span style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono, flex: 1 }}>{t.desc}</span>
-                <span style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>{t.cols.length} cols</span>
-                <span style={{ color: C.textDim, fontSize: 12 }}>{expanded[t.name] ? "▲" : "▼"}</span>
+                <span style={{ fontFamily: C.mono, fontSize: 16, fontWeight: 700, color: t.color }}>{t.name}</span>
+                <span style={{ fontSize: 13, color: C.textDim, fontFamily: C.mono, flex: 1 }}>{t.desc}</span>
+                <span style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>{t.cols.length} cols</span>
+                <span style={{ color: C.textDim, fontSize: 14 }}>{expanded[t.name] ? "▲" : "▼"}</span>
               </div>
               {expanded[t.name] && (
                 <div style={{ borderTop: `1px solid ${C.border}`, overflowX: "auto" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: C.mono }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontFamily: C.mono }}>
                     <thead>
                       <tr style={{ background: "rgba(0,0,0,0.3)" }}>
                         {["Column", "Type", "Constraint", "Description"].map(h => (
-                          <th key={h} style={{ padding: "8px 14px", textAlign: "left", color: C.textDim, fontSize: 10, letterSpacing: 1, fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>
+                          <th key={h} style={{ padding: "8px 14px", textAlign: "left", color: C.textDim, fontSize: 12, letterSpacing: 1, fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
@@ -1443,7 +1530,7 @@ function Schemas() {
                         <tr key={c.col} style={{ borderTop: `1px solid ${C.borderLight}`, background: i % 2 === 0 ? "transparent" : C.bg }}>
                           <td style={{ padding: "8px 14px", color: t.color, fontWeight: 600, whiteSpace: "nowrap" }}>{c.col}</td>
                           <td style={{ padding: "8px 14px", color: "#a78bfa", whiteSpace: "nowrap" }}>{c.type}</td>
-                          <td style={{ padding: "8px 14px", color: C.amber, fontSize: 10, whiteSpace: "nowrap" }}>{c.constraint}</td>
+                          <td style={{ padding: "8px 14px", color: C.amber, fontSize: 12, whiteSpace: "nowrap" }}>{c.constraint}</td>
                           <td style={{ padding: "8px 14px", color: C.textMid }}>{c.desc}</td>
                         </tr>
                       ))}
@@ -1462,26 +1549,26 @@ function Schemas() {
             <div key={col.name} style={{ border: `1px solid ${C.border}`, borderRadius: 10, background: C.card, overflow: "hidden" }}>
               <div style={{ padding: "18px 20px", borderBottom: `1px solid ${C.border}`, background: C.bg, display: "flex", gap: 20, flexWrap: "wrap", alignItems: "flex-start" }}>
                 <div>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>COLLECTION</div>
-                  <div style={{ fontFamily: C.mono, fontSize: 16, fontWeight: 700, color: col.color }}>{col.name}</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>COLLECTION</div>
+                  <div style={{ fontFamily: C.mono, fontSize: 18, fontWeight: 700, color: col.color }}>{col.name}</div>
                 </div>
                 {[["Model", col.model], ["Dimensions", col.dims], ["Distance", col.distance]].map(([k, v]) => (
                   <div key={k}>
-                    <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>{k}</div>
-                    <div style={{ fontFamily: C.mono, fontSize: 12, color: C.text }}>{v}</div>
+                    <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>{k}</div>
+                    <div style={{ fontFamily: C.mono, fontSize: 14, color: C.text }}>{v}</div>
                   </div>
                 ))}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>PURPOSE</div>
-                  <div style={{ fontFamily: C.mono, fontSize: 11, color: C.textMid }}>{col.desc}</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 4 }}>PURPOSE</div>
+                  <div style={{ fontFamily: C.mono, fontSize: 13, color: C.textMid }}>{col.desc}</div>
                 </div>
               </div>
               <div style={{ padding: "16px 20px" }}>
-                <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, letterSpacing: 1, marginBottom: 10 }}>PAYLOAD SCHEMA</div>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: C.mono }}>
+                <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, letterSpacing: 1, marginBottom: 10 }}>PAYLOAD SCHEMA</div>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontFamily: C.mono }}>
                   <thead>
                     <tr style={{ borderBottom: `1px solid ${C.border}` }}>
-                      {["Key", "Type", "Description"].map(h => <th key={h} style={{ padding: "6px 12px", textAlign: "left", color: C.textDim, fontSize: 10, letterSpacing: 1 }}>{h}</th>)}
+                      {["Key", "Type", "Description"].map(h => <th key={h} style={{ padding: "6px 12px", textAlign: "left", color: C.textDim, fontSize: 12, letterSpacing: 1 }}>{h}</th>)}
                     </tr>
                   </thead>
                   <tbody>
@@ -1506,23 +1593,23 @@ function Schemas() {
             <div key={b.container} style={{ border: `1px solid ${C.border}`, borderRadius: 10, background: C.card, overflow: "hidden" }}>
               <div style={{ padding: "14px 18px", borderBottom: `1px solid ${C.border}`, background: C.bg, display: "flex", gap: 20, flexWrap: "wrap" }}>
                 <div>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>CONTAINER</div>
-                  <div style={{ fontFamily: C.mono, fontSize: 14, fontWeight: 700, color: C.sky }}>{b.container}</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>CONTAINER</div>
+                  <div style={{ fontFamily: C.mono, fontSize: 16, fontWeight: 700, color: C.sky }}>{b.container}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>ACCESS</div>
-                  <div style={{ fontFamily: C.mono, fontSize: 11, color: C.amber }}>{b.access}</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>ACCESS</div>
+                  <div style={{ fontFamily: C.mono, fontSize: 13, color: C.amber }}>{b.access}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>LIFECYCLE</div>
-                  <div style={{ fontFamily: C.mono, fontSize: 11, color: C.textMid }}>{b.tier}</div>
+                  <div style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono, marginBottom: 3 }}>LIFECYCLE</div>
+                  <div style={{ fontFamily: C.mono, fontSize: 13, color: C.textMid }}>{b.tier}</div>
                 </div>
               </div>
               <div style={{ padding: "14px 20px" }}>
                 {b.paths.map(p => (
                   <div key={p.path} style={{ padding: "10px 14px", borderLeft: `2px solid ${C.borderLight}`, marginBottom: 8, background: C.bg, borderRadius: "0 6px 6px 0" }}>
-                    <div style={{ fontFamily: C.mono, fontSize: 11, color: C.sky, marginBottom: 3, wordBreak: "break-all" }}>{p.path}</div>
-                    <div style={{ fontFamily: C.mono, fontSize: 10, color: C.textDim }}>{p.desc}</div>
+                    <div style={{ fontFamily: C.mono, fontSize: 13, color: C.sky, marginBottom: 3, wordBreak: "break-all" }}>{p.path}</div>
+                    <div style={{ fontFamily: C.mono, fontSize: 12, color: C.textDim }}>{p.desc}</div>
                   </div>
                 ))}
               </div>
@@ -1552,15 +1639,15 @@ function AuditLog() {
   return (
     <div>
       <SectionLabel label="Audit Log — Immutable Trail" />
-      <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 8, padding: "10px 16px", marginBottom: 16, fontSize: 11, color: "#fda4af", fontFamily: C.mono }}>
+      <div style={{ background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 8, padding: "10px 16px", marginBottom: 16, fontSize: 13, color: "#fda4af", fontFamily: C.mono }}>
         INSERT-only. Every submission, match, and feedback is recorded with timestamp.
       </div>
       <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden" }}>
-        <table data-testid="audit-log-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 11, fontFamily: C.mono }}>
+        <table data-testid="audit-log-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontFamily: C.mono }}>
           <thead>
             <tr style={{ background: C.bg, borderBottom: `1px solid ${C.border}` }}>
               {["Timestamp", "User", "Action", "Resource", "IP"].map(h => (
-                <th key={h} style={{ padding: "10px 14px", textAlign: "left", color: C.textDim, fontSize: 10, letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
+                <th key={h} style={{ padding: "10px 14px", textAlign: "left", color: C.textDim, fontSize: 12, letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -1691,10 +1778,10 @@ function AdminUIBodies() {
   return (
     <div>
       <SectionLabel label="UI body records" />
-      <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 20, fontSize: 14, color: C.primary }}>
+      <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 20, fontSize: 16, color: C.primary }}>
         List, search, edit attributes, and delete unidentified body cases. Admin only. Deletion removes database rows, stored files, and Qdrant vectors for that submission.
       </div>
-      {error && <div style={{ marginBottom: 12, padding: "10px 14px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 12, color: C.rose }}>{String(error)}</div>}
+      {error && <div style={{ marginBottom: 12, padding: "10px 14px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 14, color: C.rose }}>{String(error)}</div>}
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16, alignItems: "center" }}>
         <input
@@ -1702,14 +1789,14 @@ function AdminUIBodies() {
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") { setOffset(0); loadList(); } }}
           placeholder="Search by id or attributes…"
-          style={{ flex: "1 1 220px", minWidth: 180, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }}
+          style={{ flex: "1 1 220px", minWidth: 180, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14 }}
         />
-        <button type="button" onClick={() => { setOffset(0); loadList(); }} style={{ padding: "8px 14px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+        <button type="button" onClick={() => { setOffset(0); loadList(); }} style={{ padding: "8px 14px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
           Search
         </button>
-        <span style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>{total} total</span>
-        <button type="button" disabled={offset < limit} onClick={() => setOffset(Math.max(0, offset - limit))} style={{ padding: "6px 12px", opacity: offset < limit ? 0.4 : 1, cursor: offset < limit ? "default" : "pointer", fontFamily: C.mono, fontSize: 11 }}>Previous</button>
-        <button type="button" disabled={offset + limit >= total} onClick={() => setOffset(offset + limit)} style={{ padding: "6px 12px", opacity: offset + limit >= total ? 0.4 : 1, cursor: offset + limit >= total ? "default" : "pointer", fontFamily: C.mono, fontSize: 11 }}>Next</button>
+        <span style={{ fontSize: 14, color: C.textDim, fontFamily: C.mono }}>{total} total</span>
+        <button type="button" disabled={offset < limit} onClick={() => setOffset(Math.max(0, offset - limit))} style={{ padding: "6px 12px", opacity: offset < limit ? 0.4 : 1, cursor: offset < limit ? "default" : "pointer", fontFamily: C.mono, fontSize: 13 }}>Previous</button>
+        <button type="button" disabled={offset + limit >= total} onClick={() => setOffset(offset + limit)} style={{ padding: "6px 12px", opacity: offset + limit >= total ? 0.4 : 1, cursor: offset + limit >= total ? "default" : "pointer", fontFamily: C.mono, fontSize: 13 }}>Next</button>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1.1fr)", gap: 20, alignItems: "start" }} className="admin-uibody-grid">
@@ -1719,7 +1806,7 @@ function AdminUIBodies() {
           ) : items.length === 0 ? (
             <div style={{ padding: 20, fontFamily: C.mono, color: C.textDim }}>No records.</div>
           ) : (
-            <table data-testid="admin-uibody-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: C.mono }}>
+            <table data-testid="admin-uibody-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, fontFamily: C.mono }}>
               <thead>
                 <tr style={{ background: C.surface, borderBottom: `1px solid ${C.border}` }}>
                   <th style={{ textAlign: "left", padding: "10px 12px", color: C.textDim }}>ID</th>
@@ -1740,7 +1827,7 @@ function AdminUIBodies() {
                       background: detail?.id === row.id ? C.primaryDim : "transparent",
                     }}
                   >
-                    <td style={{ padding: "10px 12px", fontSize: 11, wordBreak: "break-all" }} title={row.id}>{String(row.id).slice(0, 8)}…</td>
+                    <td style={{ padding: "10px 12px", fontSize: 13, wordBreak: "break-all" }} title={row.id}>{String(row.id).slice(0, 8)}…</td>
                     <td style={{ padding: "10px 12px", color: C.textDim }}>{row.created_at ? String(row.created_at).slice(0, 19) : "—"}</td>
                     <td style={{ padding: "10px 12px" }}>{row.status || "—"}</td>
                     <td style={{ padding: "10px 12px", color: C.textDim }}>{row.face_condition || "—"}</td>
@@ -1759,49 +1846,49 @@ function AdminUIBodies() {
             <>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 14 }}>
                 <div>
-                  <div style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono }}>Submission ID</div>
-                  <div style={{ fontSize: 12, fontFamily: C.mono, wordBreak: "break-all" }}>{detail.id}</div>
+                  <div style={{ fontSize: 13, color: C.textDim, fontFamily: C.mono }}>Submission ID</div>
+                  <div style={{ fontSize: 14, fontFamily: C.mono, wordBreak: "break-all" }}>{detail.id}</div>
                 </div>
-                <button type="button" onClick={() => removeRecord(detail.id)} style={{ padding: "8px 12px", background: C.rose, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 11, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
+                <button type="button" onClick={() => removeRecord(detail.id)} style={{ padding: "8px 12px", background: C.rose, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}>
                   Delete case
                 </button>
               </div>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
                 <div>
-                  <label style={{ fontSize: 10, color: C.textDim, display: "block", marginBottom: 4 }}>Face condition</label>
-                  <select value={faceCond} onChange={(e) => setFaceCond(e.target.value)} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 8px", color: C.text, fontFamily: C.mono, fontSize: 12 }}>
+                  <label style={{ fontSize: 12, color: C.textDim, display: "block", marginBottom: 4 }}>Face condition</label>
+                  <select value={faceCond} onChange={(e) => setFaceCond(e.target.value)} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 8px", color: C.text, fontFamily: C.mono, fontSize: 14 }}>
                     {FACE_CONDITION_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 10, color: C.textDim, display: "block", marginBottom: 4 }}>Status</label>
-                  <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 8px", color: C.text, fontFamily: C.mono, fontSize: 12 }}>
+                  <label style={{ fontSize: 12, color: C.textDim, display: "block", marginBottom: 4 }}>Status</label>
+                  <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 8px", color: C.text, fontFamily: C.mono, fontSize: 14 }}>
                     {SUBMISSION_STATUS_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
                   </select>
                 </div>
               </div>
-              <div style={{ fontSize: 10, color: C.textDim, marginBottom: 4 }}>Attributes (manual JSON)</div>
-              <textarea value={manualJson} onChange={(e) => setManualJson(e.target.value)} rows={8} style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: 10, color: C.text, fontFamily: C.mono, fontSize: 11, marginBottom: 12 }} />
-              <div style={{ fontSize: 10, color: C.textDim, marginBottom: 4 }}>Attributes (AI JSON)</div>
-              <textarea value={aiJson} onChange={(e) => setAiJson(e.target.value)} rows={6} style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: 10, color: C.text, fontFamily: C.mono, fontSize: 11, marginBottom: 12 }} />
+              <div style={{ fontSize: 12, color: C.textDim, marginBottom: 4 }}>Attributes (manual JSON)</div>
+              <textarea value={manualJson} onChange={(e) => setManualJson(e.target.value)} rows={8} style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: 10, color: C.text, fontFamily: C.mono, fontSize: 13, marginBottom: 12 }} />
+              <div style={{ fontSize: 12, color: C.textDim, marginBottom: 4 }}>Attributes (AI JSON)</div>
+              <textarea value={aiJson} onChange={(e) => setAiJson(e.target.value)} rows={6} style={{ width: "100%", boxSizing: "border-box", background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: 10, color: C.text, fontFamily: C.mono, fontSize: 13, marginBottom: 12 }} />
               {detail.images?.length > 0 && (
                 <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontSize: 10, color: C.textDim, marginBottom: 8 }}>Images</div>
+                  <div style={{ fontSize: 12, color: C.textDim, marginBottom: 8 }}>Images</div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {detail.images.map((im) => (
                       <div key={im.id} style={{ textAlign: "center" }}>
                         <img src={getPhotoUrl(im.path)} alt={im.image_type} style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 4, border: `1px solid ${C.border}` }} />
-                        <div style={{ fontSize: 9, color: C.textDim, maxWidth: 72, overflow: "hidden", textOverflow: "ellipsis" }}>{im.image_type}</div>
+                        <div style={{ fontSize: 11, color: C.textDim, maxWidth: 72, overflow: "hidden", textOverflow: "ellipsis" }}>{im.image_type}</div>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <button type="button" onClick={saveDetail} style={{ padding: "10px 16px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                <button type="button" onClick={saveDetail} style={{ padding: "10px 16px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
                   Save changes
                 </button>
-                {saveMsg && <span style={{ fontSize: 12, fontFamily: C.mono, color: saveMsg === "Saved" ? C.emerald : C.rose }}>{saveMsg}</span>}
+                {saveMsg && <span style={{ fontSize: 14, fontFamily: C.mono, color: saveMsg === "Saved" ? C.emerald : C.rose }}>{saveMsg}</span>}
               </div>
             </>
           )}
@@ -1839,6 +1926,48 @@ function UserManagement() {
   const [newStationName, setNewStationName] = useState("");
   const [mapError, setMapError] = useState("");
   const [mapInfo, setMapInfo] = useState("");
+
+  const [importFile, setImportFile] = useState(null);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importError, setImportError] = useState("");
+  const [importSuccess, setImportSuccess] = useState("");
+
+  const handleFileChange = (e) => {
+    setImportFile(e.target.files[0] || null);
+    setImportError("");
+    setImportSuccess("");
+  };
+
+  const handleImportSubmit = async () => {
+    if (!importFile) return;
+    setImportLoading(true);
+    setImportError("");
+    setImportSuccess("");
+    
+    const formData = new FormData();
+    formData.append("file", importFile);
+    
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/import-excel`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${getToken()}` },
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.detail || "Import failed");
+      }
+      setImportSuccess(data.message || `Success! ${data.count} records imported.`);
+      setImportFile(null);
+      // clear the file input
+      const fileInput = document.getElementById('excel-import-file');
+      if (fileInput) fileInput.value = '';
+    } catch (err) {
+      setImportError(err.message);
+    } finally {
+      setImportLoading(false);
+    }
+  };
 
   const load = () => {
     setLoading(true);
@@ -1915,28 +2044,48 @@ function UserManagement() {
   return (
     <div>
       <SectionLabel label="User Management" />
-      <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 24, fontSize: 14, color: C.primary }}>
+      <div style={{ background: C.primaryDim, border: `1px solid ${C.primaryBorder}`, borderRadius: 8, padding: "14px 18px", marginBottom: 24, fontSize: 16, color: C.primary }}>
         Add and edit users. Only admins can access this page.
       </div>
-      {error && <div style={{ marginBottom: 12, padding: "10px 14px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 12, color: C.rose }}>{error}</div>}
-      {geoError && <div style={{ marginBottom: 12, padding: "10px 14px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 12, color: C.rose }}>{geoError}</div>}
+      {error && <div style={{ marginBottom: 12, padding: "10px 14px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 14, color: C.rose }}>{error}</div>}
+      {geoError && <div style={{ marginBottom: 12, padding: "10px 14px", background: C.roseDim, border: `1px solid ${C.roseBorder}`, borderRadius: 6, fontSize: 14, color: C.rose }}>{geoError}</div>}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-        <button type="button" onClick={() => setGeoTab("users")} style={{ padding: "8px 12px", borderRadius: 999, border: `1px solid ${C.border}`, background: geoTab === "users" ? C.primary : C.surface, color: geoTab === "users" ? "#fff" : C.text, fontFamily: C.mono, fontSize: 11, cursor: "pointer" }}>
+        <button type="button" onClick={() => setGeoTab("users")} style={{ padding: "8px 12px", borderRadius: 999, border: `1px solid ${C.border}`, background: geoTab === "users" ? C.primary : C.surface, color: geoTab === "users" ? "#fff" : C.text, fontFamily: C.mono, fontSize: 13, cursor: "pointer" }}>
           Users
         </button>
-        <button type="button" onClick={() => setGeoTab("mapping")} style={{ padding: "8px 12px", borderRadius: 999, border: `1px solid ${C.border}`, background: geoTab === "mapping" ? C.primary : C.surface, color: geoTab === "mapping" ? "#fff" : C.text, fontFamily: C.mono, fontSize: 11, cursor: "pointer" }}>
+        <button type="button" onClick={() => setGeoTab("mapping")} style={{ padding: "8px 12px", borderRadius: 999, border: `1px solid ${C.border}`, background: geoTab === "mapping" ? C.primary : C.surface, color: geoTab === "mapping" ? "#fff" : C.text, fontFamily: C.mono, fontSize: 13, cursor: "pointer" }}>
           Districts & Stations
         </button>
+        <button type="button" onClick={() => setGeoTab("import")} style={{ padding: "8px 12px", borderRadius: 999, border: `1px solid ${C.border}`, background: geoTab === "import" ? C.primary : C.surface, color: geoTab === "import" ? "#fff" : C.text, fontFamily: C.mono, fontSize: 13, cursor: "pointer" }}>
+          Import Data
+        </button>
       </div>
+
+      {geoTab === "import" && (
+        <div style={{ marginBottom: 24, padding: 18, background: C.card, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 16 }}>Import Database (Excel/CSV)</div>
+          <p style={{ fontSize: 14, color: C.textDim, marginBottom: 16 }}>
+            Upload your Excel or CSV file containing records. The file must follow the standard template format.
+          </p>
+          <input id="excel-import-file" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onChange={handleFileChange} style={{ marginBottom: 16, fontSize: 14, color: C.text }} />
+          <div style={{ display: "flex", gap: 10 }}>
+            <button type="button" onClick={handleImportSubmit} disabled={!importFile || importLoading} style={{ padding: "10px 20px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: (!importFile || importLoading) ? "not-allowed" : "pointer", opacity: (!importFile || importLoading) ? 0.6 : 1 }}>
+              {importLoading ? "Importing..." : "Start Import"}
+            </button>
+          </div>
+          {importSuccess && <div style={{ marginTop: 12, color: C.emerald, fontSize: 14, fontWeight: "bold" }}>{importSuccess}</div>}
+          {importError && <div style={{ marginTop: 12, color: C.rose, fontSize: 14, fontWeight: "bold" }}>{importError}</div>}
+        </div>
+      )}
 
       {geoTab === "mapping" && (
         <div style={{ marginBottom: 24, padding: 18, background: C.card, border: `1px solid ${C.border}`, borderRadius: 10 }}>
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <div style={{ minWidth: 260, flex: "1 1 260px" }}>
-              <div style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Districts</div>
+              <div style={{ fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Districts</div>
               <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
                 <input value={newDistrictName} onChange={(e) => setNewDistrictName(e.target.value)} placeholder="Add district…"
-                  style={{ flex: 1, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }} />
+                  style={{ flex: 1, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14 }} />
                 <button type="button" onClick={async () => {
                   setMapError(""); setMapInfo("");
                   const name = (newDistrictName || "").trim();
@@ -1950,15 +2099,15 @@ function UserManagement() {
                     const data = await r.json?.().catch(() => ({}));
                     setMapError(data.detail || "Failed to add district");
                   }
-                }} style={{ padding: "8px 12px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                }} style={{ padding: "8px 12px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
                   Add
                 </button>
               </div>
               <div style={{ border: `1px solid ${C.borderLight}`, borderRadius: 8, overflow: "hidden" }}>
-                {mapDistricts.length === 0 && <div style={{ padding: 12, color: C.textDim, fontFamily: C.mono, fontSize: 12 }}>No districts yet.</div>}
+                {mapDistricts.length === 0 && <div style={{ padding: 12, color: C.textDim, fontFamily: C.mono, fontSize: 14 }}>No districts yet.</div>}
                 {mapDistricts.map((d) => (
                   <button key={d.id} type="button" onClick={() => { setMapSelectedDistrictId(d.id); setNewStationName(""); setMapInfo(""); setMapError(""); loadMappingStations(d.id); }}
-                    style={{ width: "100%", textAlign: "left", padding: "10px 12px", border: "none", borderBottom: `1px solid ${C.borderLight}`, background: mapSelectedDistrictId === d.id ? C.primaryDim : C.surface, cursor: "pointer", fontFamily: C.mono, fontSize: 12, color: d.is_active ? C.text : C.textDim }}>
+                    style={{ width: "100%", textAlign: "left", padding: "10px 12px", border: "none", borderBottom: `1px solid ${C.borderLight}`, background: mapSelectedDistrictId === d.id ? C.primaryDim : C.surface, cursor: "pointer", fontFamily: C.mono, fontSize: 14, color: d.is_active ? C.text : C.textDim }}>
                     {d.name} {d.is_active ? "" : "(inactive)"}
                   </button>
                 ))}
@@ -1966,16 +2115,16 @@ function UserManagement() {
             </div>
 
             <div style={{ minWidth: 320, flex: "2 1 320px" }}>
-              <div style={{ fontSize: 11, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Police Stations</div>
+              <div style={{ fontSize: 13, color: C.textDim, fontFamily: C.mono, marginBottom: 8 }}>Police Stations</div>
               {!mapSelectedDistrictId ? (
-                <div style={{ padding: 12, background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 8, color: C.textDim, fontFamily: C.mono, fontSize: 12 }}>
+                <div style={{ padding: 12, background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 8, color: C.textDim, fontFamily: C.mono, fontSize: 14 }}>
                   Select a district to manage its stations.
                 </div>
               ) : (
                 <>
                   <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
                     <input value={newStationName} onChange={(e) => setNewStationName(e.target.value)} placeholder="Add police station…"
-                      style={{ flex: 1, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 12 }} />
+                      style={{ flex: 1, background: C.surface, border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "8px 10px", color: C.text, fontFamily: C.mono, fontSize: 14 }} />
                     <button type="button" onClick={async () => {
                       setMapError(""); setMapInfo("");
                       const name = (newStationName || "").trim();
@@ -1989,22 +2138,22 @@ function UserManagement() {
                         const data = await r.json?.().catch(() => ({}));
                         setMapError(data.detail || "Failed to add police station");
                       }
-                    }} style={{ padding: "8px 12px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                    }} style={{ padding: "8px 12px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
                       Add
                     </button>
                   </div>
 
                   {(mapError || mapInfo) && (
-                    <div style={{ marginBottom: 10, padding: "10px 12px", background: mapError ? C.roseDim : C.primaryDim, border: `1px solid ${mapError ? C.roseBorder : C.primaryBorder}`, borderRadius: 8, color: mapError ? C.rose : C.primary, fontFamily: C.mono, fontSize: 12 }}>
+                    <div style={{ marginBottom: 10, padding: "10px 12px", background: mapError ? C.roseDim : C.primaryDim, border: `1px solid ${mapError ? C.roseBorder : C.primaryBorder}`, borderRadius: 8, color: mapError ? C.rose : C.primary, fontFamily: C.mono, fontSize: 14 }}>
                       {mapError || mapInfo}
                     </div>
                   )}
 
                   <div style={{ border: `1px solid ${C.borderLight}`, borderRadius: 8, overflow: "hidden" }}>
-                    {mapStations.length === 0 && <div style={{ padding: 12, color: C.textDim, fontFamily: C.mono, fontSize: 12 }}>No stations yet.</div>}
+                    {mapStations.length === 0 && <div style={{ padding: 12, color: C.textDim, fontFamily: C.mono, fontSize: 14 }}>No stations yet.</div>}
                     {mapStations.map((s) => (
                       <div key={s.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 12px", borderBottom: `1px solid ${C.borderLight}`, background: C.surface }}>
-                        <div style={{ fontFamily: C.mono, fontSize: 12, color: s.is_active ? C.text : C.textDim }}>{s.name} {s.is_active ? "" : "(inactive)"}</div>
+                        <div style={{ fontFamily: C.mono, fontSize: 14, color: s.is_active ? C.text : C.textDim }}>{s.name} {s.is_active ? "" : "(inactive)"}</div>
                         <button type="button" onClick={async () => {
                           setMapError(""); setMapInfo("");
                           try {
@@ -2014,7 +2163,7 @@ function UserManagement() {
                             const data = await r.json?.().catch(() => ({}));
                             setMapError(data.detail || "Failed to update police station");
                           }
-                        }} style={{ fontSize: 11, color: C.cyan, background: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 10px", cursor: "pointer", fontFamily: C.mono }}>
+                        }} style={{ fontSize: 13, color: C.cyan, background: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 10px", cursor: "pointer", fontFamily: C.mono }}>
                           {s.is_active ? "Disable" : "Enable"}
                         </button>
                       </div>
@@ -2027,72 +2176,72 @@ function UserManagement() {
         </div>
       )}
 
-      {geoTab !== "mapping" && (
+      {geoTab === "users" && (
         <>
       <div style={{ marginBottom: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button type="button" onClick={() => { setAddOpen(true); setError(""); }}
-          style={{ padding: "10px 20px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+          style={{ padding: "10px 20px", background: C.emerald, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
           + Add user
         </button>
       </div>
 
       {addOpen && (
         <div style={{ marginBottom: 24, padding: 20, background: C.card, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.primary, marginBottom: 16 }}>New user</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 16 }}>New user</div>
           <form onSubmit={handleAdd} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 400 }}>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Username</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Username</label>
               <input type="text" value={addForm.username} onChange={(e) => setAddForm((f) => ({ ...f, username: e.target.value }))} required
-                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
+                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }} />
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Password</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Password</label>
               <input type="password" value={addForm.password} onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))} required
-                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
+                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }} />
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Name</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Name</label>
               <input type="text" value={addForm.name} onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))} required
-                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
+                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }} />
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Role</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Role</label>
               <select value={addForm.role} onChange={(e) => setAddForm((f) => ({ ...f, role: e.target.value }))}
-                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }}>
+                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }}>
                 {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, " ")}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>District</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>District</label>
               <select value={addForm.district_id} onChange={(e) => { const v = e.target.value; setAddForm((f) => ({ ...f, district_id: v, station_id: "" })); loadStationsForDistrict(v); }}
-                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }}>
+                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }}>
                 <option value="">— none —</option>
                 {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Police Station</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Police Station</label>
               <select value={addForm.station_id} onChange={(e) => setAddForm((f) => ({ ...f, station_id: e.target.value }))}
                 disabled={!addForm.district_id}
-                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, opacity: addForm.district_id ? 1 : 0.6 }}>
+                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14, opacity: addForm.district_id ? 1 : 0.6 }}>
                 <option value="">— none —</option>
                 {stations.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              <button type="submit" style={{ padding: "9px 18px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Create</button>
-              <button type="button" onClick={() => { setAddOpen(false); setError(""); }} style={{ padding: "9px 18px", background: C.borderLight, color: C.text, border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>Cancel</button>
+              <button type="submit" style={{ padding: "9px 18px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Create</button>
+              <button type="button" onClick={() => { setAddOpen(false); setError(""); }} style={{ padding: "9px 18px", background: C.borderLight, color: C.text, border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14, cursor: "pointer" }}>Cancel</button>
             </div>
           </form>
         </div>
       )}
 
       <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden", background: C.card }}>
-        <table data-testid="admin-users-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, fontFamily: C.mono }}>
+        <table data-testid="admin-users-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 14, fontFamily: C.mono }}>
           <thead>
             <tr style={{ background: C.bg, borderBottom: `1px solid ${C.border}` }}>
               {["Username", "Name", "Role", "District", "Station", "Active", "Created", ""].map((h) => (
-                <th key={h} style={{ padding: "10px 14px", textAlign: "left", color: C.textDim, fontWeight: 600, fontSize: 11 }}>{h}</th>
+                <th key={h} style={{ padding: "10px 14px", textAlign: "left", color: C.textDim, fontWeight: 600, fontSize: 13 }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -2110,7 +2259,7 @@ function UserManagement() {
                 <td style={{ padding: "10px 14px", color: C.textDim }}>{u.created_at ? u.created_at.slice(0, 10) : "—"}</td>
                 <td style={{ padding: "10px 14px" }}>
                   {editId === u.id ? null : (
-                    <button type="button" onClick={() => openEdit(u)} style={{ fontSize: 11, color: C.cyan, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Edit</button>
+                    <button type="button" onClick={() => openEdit(u)} style={{ fontSize: 13, color: C.cyan, background: "none", border: "none", cursor: "pointer", fontFamily: C.mono }}>Edit</button>
                   )}
                 </td>
               </tr>
@@ -2121,49 +2270,49 @@ function UserManagement() {
 
       {editId && (
         <div style={{ marginTop: 24, padding: 20, background: C.card, border: `1px solid ${C.border}`, borderRadius: 10 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.primary, marginBottom: 16 }}>Edit user</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.primary, marginBottom: 16 }}>Edit user</div>
           <form onSubmit={handleEdit} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 400 }}>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Name</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Name</label>
               <input type="text" value={editForm.name} onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} required
-                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
+                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }} />
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Role</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Role</label>
               <select value={editForm.role} onChange={(e) => setEditForm((f) => ({ ...f, role: e.target.value }))}
-                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }}>
+                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }}>
                 {ROLES.map((r) => <option key={r} value={r}>{r.replace(/_/g, " ")}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>District</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>District</label>
               <select value={editForm.district_id} onChange={(e) => { const v = e.target.value; setEditForm((f) => ({ ...f, district_id: v, station_id: "" })); loadStationsForDistrict(v); }}
-                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }}>
+                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }}>
                 <option value="">— none —</option>
                 {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>Police Station</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>Police Station</label>
               <select value={editForm.station_id} onChange={(e) => setEditForm((f) => ({ ...f, station_id: e.target.value }))}
                 disabled={!editForm.district_id}
-                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, opacity: editForm.district_id ? 1 : 0.6 }}>
+                style={{ width: "100%", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14, opacity: editForm.district_id ? 1 : 0.6 }}>
                 <option value="">— none —</option>
                 {stations.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <input type="checkbox" id="edit-active" checked={editForm.is_active} onChange={(e) => setEditForm((f) => ({ ...f, is_active: e.target.checked }))} />
-              <label htmlFor="edit-active" style={{ fontSize: 12, fontFamily: C.mono }}>Active</label>
+              <label htmlFor="edit-active" style={{ fontSize: 14, fontFamily: C.mono }}>Active</label>
             </div>
             <div>
-              <label style={{ fontSize: 10, color: C.textDim, fontFamily: C.mono }}>New password (leave blank to keep)</label>
+              <label style={{ fontSize: 12, color: C.textDim, fontFamily: C.mono }}>New password (leave blank to keep)</label>
               <input type="password" value={editForm.password} onChange={(e) => setEditForm((f) => ({ ...f, password: e.target.value }))}
-                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12 }} />
+                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, padding: "8px 10px", border: `1px solid ${C.borderLight}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14 }} />
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              <button type="submit" style={{ padding: "9px 18px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Save</button>
-              <button type="button" onClick={() => { setEditId(null); setError(""); }} style={{ padding: "9px 18px", background: C.borderLight, color: C.text, border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>Cancel</button>
+              <button type="submit" style={{ padding: "9px 18px", background: C.primary, color: "#fff", border: "none", borderRadius: 6, fontFamily: C.mono, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Save</button>
+              <button type="button" onClick={() => { setEditId(null); setError(""); }} style={{ padding: "9px 18px", background: C.borderLight, color: C.text, border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 14, cursor: "pointer" }}>Cancel</button>
             </div>
           </form>
         </div>
@@ -2190,7 +2339,7 @@ function AboutTab() {
     background: "#e2e8f0",
     padding: "4px 12px",
     borderRadius: 99,
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: 600,
     color: "#475569",
     marginRight: 6,
@@ -2203,8 +2352,8 @@ function AboutTab() {
       <SectionLabel label="System Information & Architecture" />
       
       <div style={cardStyle}>
-        <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginBottom: 12 }}>System Functionality</div>
-        <ul style={{ paddingLeft: 20, fontSize: 13, lineHeight: 1.6 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: C.primary, marginBottom: 12 }}>System Functionality</div>
+        <ul style={{ paddingLeft: 20, fontSize: 15, lineHeight: 1.6 }}>
           <li><strong>AdaFace Integration</strong>: High-accuracy facial embeddings optimized for low-quality surveillance footage.</li>
           <li><strong>Quality Scoring</strong>: Real-time image quality assessment (L2 Norm) to ensure biometric reliability.</li>
           <li><strong>UI Body Search</strong>: Face, attribute and voice-note matching against unidentified-body submissions.</li>
@@ -2214,8 +2363,8 @@ function AboutTab() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
         <div style={cardStyle}>
-          <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Architecture</div>
-          <ul style={{ paddingLeft: 20, fontSize: 13, lineHeight: 1.6 }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Architecture</div>
+          <ul style={{ paddingLeft: 20, fontSize: 15, lineHeight: 1.6 }}>
             <li><strong>Decoupled Models</strong>: AI weights mounted via Azure Blob Storage for ultra-fast deployments.</li>
             <li><strong>Vector Search</strong>: Qdrant-powered sub-millisecond similarity lookups for large datasets.</li>
             <li><strong>Micro-Background Tasks</strong>: Celery/Redis pipeline for asynchronous biometric processing.</li>
@@ -2223,7 +2372,7 @@ function AboutTab() {
         </div>
         
         <div style={cardStyle}>
-          <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Tech Stack</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Tech Stack</div>
           <div style={{ marginTop: 8 }}>
             {["FastAPI", "React (PWA)", "Qdrant", "PostgreSQL", "PyTorch", "InsightFace", "AdaFace"].map(t => (
               <span key={t} style={badgeStyle}>{t}</span>
@@ -2233,8 +2382,8 @@ function AboutTab() {
       </div>
 
       <div style={cardStyle}>
-        <div style={{ fontSize: 16, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Operational Cost (approx. 15k records)</div>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: C.primary, marginBottom: 12 }}>Operational Cost (approx. 15k records)</div>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 15 }}>
           <tbody>
             {[
               ["Azure App Service", "$100.00"],
@@ -2303,13 +2452,13 @@ export default function App() {
       <div className="top-bar" style={{ background: C.primary, color: "#fff", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, overflowX: "auto", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
         <div className="top-bar-logo" style={{ display: "flex", alignItems: "center", gap: 12, paddingRight: 24, borderRight: "1px solid rgba(255,255,255,0.2)", marginRight: 20, minWidth: "fit-content" }}>
           <img src="https://haryanastorage26529.blob.core.windows.net/assets/haryana-police-logo.png" alt="Haryana Police Logo" style={{ height: 36 }} />
-          <span style={{ fontFamily: C.display, fontSize: 18, fontWeight: 700, letterSpacing: 0.5, whiteSpace: "nowrap" }}>Pehchan</span>
+          <span style={{ fontFamily: C.display, fontSize: 20, fontWeight: 700, letterSpacing: 0.5, whiteSpace: "nowrap" }}>Pehchan</span>
         </div>
         <div className="top-bar-tabs" style={{ display: "flex", alignItems: "center" }}>
           {tabs.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
               background: "transparent", border: "none", borderBottom: `3px solid ${tab === t.id ? "#fff" : "transparent"}`,
-              color: tab === t.id ? "#fff" : "rgba(255,255,255,0.8)", fontFamily: C.mono, fontSize: 13, fontWeight: tab === t.id ? 600 : 400,
+              color: tab === t.id ? "#fff" : "rgba(255,255,255,0.8)", fontFamily: C.mono, fontSize: 15, fontWeight: tab === t.id ? 600 : 400,
               padding: "16px 18px", cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
             }}>{t.label}</button>
           ))}
@@ -2317,11 +2466,11 @@ export default function App() {
         <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
           {user ? (
             <>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.9)" }}>{user.name || user.username || "—"}</span>
-              <button type="button" onClick={() => { clearAuth(); setUser(null); }} style={{ fontSize: 11, color: "rgba(255,255,255,0.9)", background: "transparent", border: "1px solid rgba(255,255,255,0.5)", borderRadius: 4, padding: "6px 12px", fontFamily: C.mono, cursor: "pointer" }}>Logout</button>
+              <span style={{ fontSize: 14, color: "rgba(255,255,255,0.9)" }}>{user.name || user.username || "—"}</span>
+              <button type="button" onClick={() => { clearAuth(); setUser(null); }} style={{ fontSize: 13, color: "rgba(255,255,255,0.9)", background: "transparent", border: "1px solid rgba(255,255,255,0.5)", borderRadius: 4, padding: "6px 12px", fontFamily: C.mono, cursor: "pointer" }}>Logout</button>
             </>
           ) : (
-            <button type="button" onClick={() => setTab("login")} style={{ fontSize: 11, color: "rgba(255,255,255,0.9)", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.5)", borderRadius: 4, padding: "6px 12px", fontFamily: C.mono, cursor: "pointer", fontWeight: "bold" }}>Staff Login</button>
+            <button type="button" onClick={() => setTab("login")} style={{ fontSize: 13, color: "rgba(255,255,255,0.9)", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.5)", borderRadius: 4, padding: "6px 12px", fontFamily: C.mono, cursor: "pointer", fontWeight: "bold" }}>Staff Login</button>
           )}
         </div>
       </div>
@@ -2337,9 +2486,7 @@ export default function App() {
         {tab === "about" && user?.role === "admin" && <AboutTab />}
       </div>
 
-      <div style={{ textAlign: "center", padding: "14px", borderTop: `1px solid ${C.border}`, fontSize: 12, color: C.textDim, fontFamily: C.mono, background: C.surface }}>
-        Pehchan by Haryana Police Phase 1 MVP · AI outputs are investigative leads only; human verification required.
-      </div>
+
     </div>
   );
 }
